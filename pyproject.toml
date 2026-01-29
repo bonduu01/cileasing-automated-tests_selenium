@@ -1,0 +1,18 @@
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests_pages"]
+
+[tool.black]
+line-length = 120
+target-version = ['py313']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+[tool.mypy]
+python_version = "3.13"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
