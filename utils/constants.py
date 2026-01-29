@@ -22,24 +22,27 @@ class LoginPageSelectors:
     DEFAULT_COMPANY: str = "div.uppercase"  # Contains text 'DEFAULT'
     FLOUR_MILLS_COMPANY: str = 'div.space-y-4 div.uppercase'  # Contains text 'FLOUR MILLS...'
     ERROR_TOAST: str = 'div[role="alert"]'
+    #ERROR_TOAST: str = "css=div[role='alert'].Toastify__toast-body"
     PASSWORD_BLANK_ERROR: str = 'p.text-xs.mt-1'  # Contains text "Password cannot be blank"
     VALIDATION_ERROR: str = 'p.text-xs.mt-1'
     ERROR_PASSWORD_BLANK: str = "Password cannot be blank"
     ERROR_USERNAME_BLANK: str = "Email cannot be blank"
     ERROR_INVALID_CREDENTIALS: str = "Invalid username or password"
-    DEFAULT_LINK: str = "DEFAULT"  # Link text
+    DEFAULT_LINK: str = "DEFAULT"
 
 
 @dataclass(frozen=True)
 class SelfServicePageSelectors:
     """Selectors for the Self-Service Page."""
-    PERSONAL_NAME: str = "span.text-dark0b.font-\\[400\\].text-\\[14px\\]"
+    #PERSONAL_NAME: str = "span.text-dark0b.font-\\[400\\].text-\\[14px\\]"
+    PERSONAL_NAME = 'div.flex.items-center.space-x-2 > h1.header'
+    ADD_NEW_BANK_DETAIL_BUTTON = "button.px-4"  # ✅ Simplified
     MM_PROFILE: str = "span.ant-avatar-string"  # Contains text 'MM'
     LOGOUT_LINK: str = "p.text-danger"  # Contains text 'Logout'
     EDIT_LINK: str = "button"  # Contains text 'Edit'
     EDIT_SUBMIT_BUTTON: str = "button"  # Contains text 'Submit'
     CLICK_BANK_DETAIL: str = "button"  # Contains text 'Bank Details'
-    ADD_NEW_BANK_DETAIL_BUTTON: str = "button.px-4.py-1.text-\\[\\#4F5E71\\].bg-white.border-\\[1px\\]"
+    #ADD_NEW_BANK_DETAIL_BUTTON: str = "button.px-4.py-1.text-\\[\\#4F5E71\\].bg-white.border-\\[1px\\]"
     EDIT_BANK_BUTTON: str = "button"  # Contains SVG with specific path
     EMERGENCY_CONTACTS_BUTTON: str = "button"  # Contains text 'Emergency Contacts'
     EMERGENCY_CONTACTS_ADD_BUTTON: str = "button[type='button']"  # Contains text 'Add New'

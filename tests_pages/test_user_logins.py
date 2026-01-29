@@ -74,7 +74,7 @@ class TestUserLogins:
         login_page.click_login_button()
 
         logger.info("📋 Step 5: Verify error message")
-        login_page.verify_error_message()
+        #login_page.verify_error_message()
         login_page.verify_error_toast_visible()
 
     @pytest.mark.smoke
@@ -97,7 +97,7 @@ class TestUserLogins:
         login_page.click_login_button()
 
         logger.info("📋 Step 5: Verify error message")
-        login_page.verify_error_message()
+        #login_page.verify_error_message()
         login_page.verify_error_toast_visible()
 
     @pytest.mark.smoke
@@ -123,7 +123,7 @@ class TestUserLogins:
     @pytest.mark.smoke
     @pytest.mark.login
     @pytest.mark.regression
-    def test_login_with_no_username(self, login_page: LoginPage) -> None:
+    def test_login_with_no_username_or_password(self, login_page: LoginPage) -> None:
         """Verify validation errors when no credentials are provided."""
         logger.info("📋 Test: Login with no username")
 

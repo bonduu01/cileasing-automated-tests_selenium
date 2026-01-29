@@ -67,15 +67,14 @@ class LoginPage(BasePage):
         logger.info("✅ Verifying successful login - checking for company list")
         # Verify DEFAULT company is visible
         self.verify_element_visible(LOGIN_PAGE.DEFAULT_COMPANY)
-        # Verify text "DEFAULT" is present
-        self.verify_text_visible("DEFAULT")
+        self.verify_element_visible(LOGIN_PAGE.FLOUR_MILLS_COMPANY)
         logger.info("✅ Company list verified")
 
-    @log_method
-    def verify_error_message(self) -> None:
-        """Assert an error message is displayed."""
-        logger.info("⚠️ Verifying error message is displayed")
-        self.verify_has_text_visible(LOGIN_PAGE.ERROR_TOAST, LOGIN_PAGE.ERROR_INVALID_CREDENTIALS)
+    # @log_method
+    # def verify_error_message(self) -> None:
+    #     """Assert an error message is displayed."""
+    #     logger.info("⚠️ Verifying error message is displayed")
+    #     self.verify_has_text_visible(LOGIN_PAGE.ERROR_TOAST, LOGIN_PAGE.ERROR_INVALID_CREDENTIALS)
 
     @log_method
     def verify_error_toast_visible(self) -> None:

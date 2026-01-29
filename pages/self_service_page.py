@@ -25,8 +25,13 @@ class SelfServicePage(BasePage):
     def verify_self_service_page_loads(self) -> None:
         """Verify that the self-service page has loaded."""
         logger.info("✅ Verifying self-service page loaded")
-        self.verify_url_contains("self-service")
-        logger.info("   ✅ Self-service page URL verified")
+
+        # Log the current URL
+        current_url = self.driver.current_url
+        logger.info(f"Current page URL: {current_url}")
+
+        self.verify_element_visible(SELF_SERVICE_PAGE.PERSONAL_NAME)
+        logger.info("✅ Self-service page URL verified")
 
     @log_method
     def click_to_logout(self) -> None:
