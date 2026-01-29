@@ -1,0 +1,7 @@
+"""
+Configuration package for the Selenium test framework.
+"""
+
+from config.settings import settings, get_settings
+
+__all__ = ["settings", "get_settings"]

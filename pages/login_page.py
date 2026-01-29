@@ -1,76 +1,123 @@
 """
-Login Page Object Model
+Login Page Object
 """
-from selenium.webdriver.common.by import By
-from pages.base_page import BasePage
-from config.settings import settings
-from utils.logger import Logger
 
-logger = Logger.get_logger(__name__)
+import logging
+from selenium.webdriver.remote.webdriver import WebDriver
+
+from pages.base_page import BasePage
+from pages.self_service_page import SelfServicePage
+from config import settings
+from utils.constants import LOGIN_PAGE
+from utils.decorators import log_method, log_page_state
+
+logger = logging.getLogger(__name__)
 
 
 class LoginPage(BasePage):
-    """Login Page class"""
+    """Page Object for the Login Page."""
 
-    # Locators
-    USERNAME_INPUT = (By.ID, "username")
-    PASSWORD_INPUT = (By.ID, "password")
-    LOGIN_BUTTON = (By.ID, "submit")
-    ERROR_MESSAGE = (By.ID, "error")
-    FORGOT_PASSWORD_LINK = (By.LINK_TEXT, "Forgot Password?")
-    REMEMBER_ME_CHECKBOX = (By.ID, "remember-me")
-
-    def __init__(self, driver):
-        """Initialize Login Page"""
+    def __init__(self, driver: WebDriver) -> None:
         super().__init__(driver)
-        logger.info("Login Page initialized")
+        self.url = settings.base_url
+        logger.info(f"🏗️ Initialized LoginPage - URL: {self.url}")
 
-    def navigate_to_login_page(self):
-        """Navigate to login page"""
-        self.open_url(settings.login_url)
-        logger.info(f"Navigated to login page: {settings.login_url}")
+    @log_method
+    @log_page_state
+    def go_to_login_page(self) -> None:
+        """Navigate to the login page."""
+        logger.info(f"🔄 Navigating to login page: {self.url}")
+        self.navigate_to(self.url)
 
-    def enter_username(self, username: str):
-        """Enter username"""
-        self.type_text(self.USERNAME_INPUT, username)
-        logger.info(f"Entered username: {username}")
+    @log_method
+    def login_user(self, email: str = None, password: str = None) -> None:
+        """Perform login with provided or default credentials."""
+        email = email or settings.test_username
+        password = password or settings.test_password
 
-    def enter_password(self, password: str):
-        """Enter password"""
-        self.type_text(self.PASSWORD_INPUT, password)
-        logger.info("Entered password: ****")
+        logger.info(f"🔐 Attempting login with email: {email}")
 
-    def click_login_button(self):
-        """Click login button"""
-        self.click(self.LOGIN_BUTTON)
-        logger.info("Clicked login button")
+        self.fill_input(LOGIN_PAGE.EMAIL_INPUT, email)
+        self.fill_input(LOGIN_PAGE.PASSWORD_INPUT, password)
+        self.click_element(LOGIN_PAGE.SUBMIT_BUTTON)
 
-    def login(self, username: str, password: str):
-        """Perform complete login"""
-        logger.info(f"Attempting login with username: {username}")
-        self.enter_username(username)
-        self.enter_password(password)
-        self.click_login_button()
+        logger.info("✅ Login form submitted")
 
-    def quick_login(self):
-        """Quick login with default credentials"""
-        self.login(settings.valid_username, settings.valid_password)
+    @log_method
+    def enter_email(self, email: str) -> None:
+        """Enter email address."""
+        logger.info(f"📧 Entering email: {email}")
+        self.fill_input(LOGIN_PAGE.EMAIL_INPUT, email)
 
-    def get_error_message(self) -> str:
-        """Get error message text"""
-        error_text = self.get_text(self.ERROR_MESSAGE)
-        logger.info(f"Error message: {error_text}")
-        return error_text
+    @log_method
+    def enter_password(self, password: str) -> None:
+        """Enter password."""
+        logger.info(f"🔑 Entering password: {'*' * len(password)}")
+        self.fill_input(LOGIN_PAGE.PASSWORD_INPUT, password)
 
-    def is_error_message_displayed(self) -> bool:
-        """Check if error message is displayed"""
-        is_displayed = self.is_element_visible(self.ERROR_MESSAGE, timeout=5)
-        logger.info(f"Error message displayed: {is_displayed}")
-        return is_displayed
+    @log_method
+    def click_login_button(self) -> None:
+        """Click the login button."""
+        logger.info("🖱️ Clicking login button")
+        self.click_element(LOGIN_PAGE.SUBMIT_BUTTON)
 
-    def is_login_button_enabled(self) -> bool:
-        """Check if login button is enabled"""
-        element = self.find_element(self.LOGIN_BUTTON)
-        is_enabled = element.is_enabled()
-        logger.info(f"Login button enabled: {is_enabled}")
-        return is_enabled
+    @log_method
+    def verify_login_successful_load_companies(self) -> None:
+        """Assert that the login successful message is displayed."""
+        logger.info("✅ Verifying successful login - checking for company list")
+        # Verify DEFAULT company is visible
+        self.verify_element_visible(LOGIN_PAGE.DEFAULT_COMPANY)
+        # Verify text "DEFAULT" is present
+        self.verify_text_visible("DEFAULT")
+        logger.info("✅ Company list verified")
+
+    @log_method
+    def verify_error_message(self) -> None:
+        """Assert an error message is displayed."""
+        logger.info("⚠️ Verifying error message is displayed")
+        self.verify_has_text_visible(LOGIN_PAGE.ERROR_TOAST, LOGIN_PAGE.ERROR_INVALID_CREDENTIALS)
+
+    @log_method
+    def verify_error_toast_visible(self) -> None:
+        """Verify error toast alert is visible."""
+        logger.info("🔍 Checking if error toast is visible")
+        self.verify_element_visible(LOGIN_PAGE.ERROR_TOAST, timeout=5)
+
+    @log_method
+    def verify_password_blank_error(self) -> None:
+        """Verify 'Password cannot be blank' validation error."""
+        logger.info("🔍 Verifying password blank error")
+        self.verify_validation_error(LOGIN_PAGE.ERROR_PASSWORD_BLANK)
+
+    @log_method
+    def verify_username_blank_error(self) -> None:
+        """Verify 'Username cannot be blank' validation error."""
+        logger.info("🔍 Verifying username and password blank errors")
+        self.verify_validation_error(LOGIN_PAGE.ERROR_USERNAME_BLANK)
+        self.verify_validation_error(LOGIN_PAGE.ERROR_PASSWORD_BLANK)
+
+    @log_method
+    def is_password_blank_error_visible(self) -> bool:
+        """Check if password blank error is visible."""
+        logger.info("👁️ Checking password blank error visibility")
+        result = self.is_validation_error_visible(LOGIN_PAGE.ERROR_PASSWORD_BLANK)
+        logger.info(f"   Result: {result}")
+        return result
+
+    @log_method
+    def is_username_blank_error_visible(self) -> bool:
+        """Check if username blank error is visible."""
+        logger.info("👁️ Checking username blank error visibility")
+        result = self.is_validation_error_visible(LOGIN_PAGE.ERROR_USERNAME_BLANK)
+        logger.info(f"   Result: {result}")
+        return result
+
+    @log_method
+    @log_page_state
+    def click_default_company_link(self) -> SelfServicePage:
+        """Click the default company link."""
+        logger.info("🖱️ Clicking default company link")
+        # Use link text to find and click DEFAULT
+        self.click_element_by_text(LOGIN_PAGE.DEFAULT_LINK)
+        logger.info("✅ Navigating to Self Service page")
+        return SelfServicePage(self.driver)
