@@ -4,6 +4,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from pages.base_page import BasePage
 from utils.constants import EDIT_SELF_SERVICE_PAGE
 from utils.decorators import log_method
+from config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +19,7 @@ class EditSelfServicePage(BasePage):
     @log_method
     def enter_other_name(self, other_name: str) -> None:
         """Enter other name."""
+        other_name = other_name or settings.other_name
         logger.info(f"📝 Entering other name: {other_name}")
         self.fill_input(EDIT_SELF_SERVICE_PAGE.OTHER_NAME, other_name)
 
@@ -31,4 +33,4 @@ class EditSelfServicePage(BasePage):
     def click_submit_button(self) -> None:
         """Click submit button."""
         logger.info("✅ Clicking submit")
-        self.click_element_by_text("Submit")
+        self.click_element_by_text(EDIT_SELF_SERVICE_PAGE.EDIT_SUBMIT_BUTTON)

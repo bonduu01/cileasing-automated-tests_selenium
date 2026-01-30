@@ -5,6 +5,7 @@ Self Service Page Object
 import logging
 from selenium.webdriver.remote.webdriver import WebDriver
 
+from pages.edit_self_service_page import EditSelfServicePage
 from pages.base_page import BasePage
 from config import settings
 from utils.constants import SELF_SERVICE_PAGE
@@ -42,6 +43,39 @@ class SelfServicePage(BasePage):
         # Then click logout link
         self.click_element_by_text("Logout")
         logger.info("✅ Logged out successfully")
+
+    @log_method
+    def click_to_edit_personal_data_details(self) -> EditSelfServicePage:
+        """ Click the 'Edit Personal Data' link and navigate to Edit Self Service page. """
+        logger.info("🖱️ Clicking edit personal data link")
+
+        # Ensure page DOM is stable by waiting for the edit link to be present & visible
+        self.wait_for_selector(
+            SELF_SERVICE_PAGE.EDIT_LINK,
+            state="visible",
+            timeout=30
+        )
+
+        # Scroll element into view (handles off-screen issues)
+        self.scroll_to_element_by_selector(SELF_SERVICE_PAGE.EDIT_LINK)
+
+        # Optional: defensive check before clicking
+        if not self.is_enabled(SELF_SERVICE_PAGE.EDIT_LINK):
+            raise AssertionError("Edit Personal Data link is not enabled")
+
+        self.click_element(SELF_SERVICE_PAGE.EDIT_LINK, timeout=30)
+
+        logger.info("✅ Edit link clicked successfully")
+
+        # Wait for navigation to complete (URL or key element on destination page)
+        # Prefer URL or unique element verification over sleeps
+        self.wait_for_url_contains(
+            "edit",  # adjust to actual route fragment if needed
+            timeout=30
+        )
+
+        return EditSelfServicePage(self.driver)
+
 
     @log_method
     def click_edit_button(self) -> None:
