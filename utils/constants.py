@@ -28,14 +28,15 @@ class LoginPageSelectors:
     ERROR_PASSWORD_BLANK: str = "Password cannot be blank"
     ERROR_USERNAME_BLANK: str = "Email cannot be blank"
     ERROR_INVALID_CREDENTIALS: str = "Invalid username or password"
-    DEFAULT_LINK: str = "DEFAULT"
+    #DEFAULT_LINK: str = "xpath=//button[@title='DEFAULT']"
+    DEFAULT_LINK: str = "button[title='DEFAULT']"
 
 
 @dataclass(frozen=True)
 class SelfServicePageSelectors:
     """Selectors for the Self-Service Page."""
-    #PERSONAL_NAME: str = "span.text-dark0b.font-\\[400\\].text-\\[14px\\]"
-    PERSONAL_NAME = 'div.flex.items-center.space-x-2 > h1.header'
+    PERSONAL_NAME_SELECTOR: str = "xpath=//span[contains(@class,'md:block') and contains(@class,'text-dark0b')]"
+    PERSONAL_NAME: str = "NICODEMUS"
     ADD_NEW_BANK_DETAIL_BUTTON = "button.px-4"  # ✅ Simplified
     MM_PROFILE: str = "span.ant-avatar-string"  # Contains text 'MM'
     LOGOUT_LINK: str = "p.text-danger"  # Contains text 'Logout'

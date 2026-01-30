@@ -20,156 +20,128 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from config import settings
 from pages import HomePage, LoginPage, SelfServicePage
 
-# Create necessary directories
+# ------------------------------------------------------------------------------
+# Directory setup
+# ------------------------------------------------------------------------------
 os.makedirs("screenshots", exist_ok=True)
 os.makedirs("logs", exist_ok=True)
 os.makedirs("reports", exist_ok=True)
 
 
+# ------------------------------------------------------------------------------
+# Logging
+# ------------------------------------------------------------------------------
 def setup_logging():
-    """Configure console logging for all tests."""
-    # Configure root logger with console output
     logging.basicConfig(
         level=getattr(logging, settings.log_level.upper()),
-        format='%(asctime)s | %(levelname)-8s | %(name)-30s | %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S',
-        handlers=[
-            logging.StreamHandler(sys.stdout)
-        ]
+        format="%(asctime)s | %(levelname)-8s | %(name)-30s | %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        handlers=[logging.StreamHandler(sys.stdout)],
     )
 
-    # Reduce noise from selenium and urllib3
-    logging.getLogger('selenium').setLevel(logging.WARNING)
-    logging.getLogger('urllib3').setLevel(logging.WARNING)
+    logging.getLogger("selenium").setLevel(logging.WARNING)
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
 
     logger = logging.getLogger(__name__)
-    logger.info(f"{'=' * 80}")
-    logger.info(f"🚀 TEST RUN STARTED")
-    logger.info(f"   📸 Screenshots: {settings.screenshot_dir}")
+    logger.info("=" * 80)
+    logger.info("🚀 TEST RUN STARTED")
     logger.info(f"   🌐 Browser: {settings.browser}")
     logger.info(f"   👁️ Headless: {settings.headless}")
-    logger.info(f"   ⏱️  Timeout: {settings.explicit_wait}s")
-    logger.info(f"{'=' * 80}\n")
+    logger.info(f"   ⏱️  Explicit wait: {settings.explicit_wait}s")
+    logger.info("=" * 80 + "\n")
 
 
 @pytest.fixture(scope="session", autouse=True)
 def configure_logging():
-    """Auto-configure logging for all tests."""
     setup_logging()
     yield
-
-    logger = logging.getLogger(__name__)
-    logger.info(f"\n{'=' * 80}")
-    logger.info(f"✅ TEST RUN COMPLETED")
-    logger.info(f"{'=' * 80}")
+    logging.getLogger(__name__).info("\n" + "=" * 80 + "\n✅ TEST RUN COMPLETED\n" + "=" * 80)
 
 
-# --- Core WebDriver Fixtures ---
-
-
+# ------------------------------------------------------------------------------
+# WebDriver Fixture
+# ------------------------------------------------------------------------------
 @pytest.fixture(scope="function")
 def driver() -> Generator[webdriver.Remote, None, None]:
-    """
-    Function-scoped WebDriver instance.
-    Each test gets a fresh browser instance.
-    """
     logger = logging.getLogger(__name__)
-    logger.info(f"🌐 Launching {settings.browser} browser (headless={settings.headless})")
-
-    # Initialize driver based on browser setting
-    driver_instance = None
+    logger.info(f"🌐 Launching {settings.browser} (headless={settings.headless})")
 
     if settings.browser.lower() == "chrome":
-        chrome_options = webdriver.ChromeOptions()
+        options = webdriver.ChromeOptions()
 
         if settings.headless:
-            chrome_options.add_argument("--headless=new")
+            options.add_argument("--headless=new")
+            options.add_argument("--window-size=1920,1080")
 
-        chrome_options.add_argument("--start-maximized")
-        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        chrome_options.add_experimental_option('useAutomationExtension', False)
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option("useAutomationExtension", False)
 
         service = ChromeService(ChromeDriverManager().install())
-        driver_instance = webdriver.Chrome(service=service, options=chrome_options)
+        driver_instance = webdriver.Chrome(service=service, options=options)
 
     elif settings.browser.lower() == "firefox":
-        firefox_options = webdriver.FirefoxOptions()
-
+        options = webdriver.FirefoxOptions()
         if settings.headless:
-            firefox_options.add_argument("--headless")
+            options.add_argument("--headless")
 
         service = FirefoxService(GeckoDriverManager().install())
-        driver_instance = webdriver.Firefox(service=service, options=firefox_options)
+        driver_instance = webdriver.Firefox(service=service, options=options)
 
     elif settings.browser.lower() == "edge":
-        edge_options = webdriver.EdgeOptions()
-
+        options = webdriver.EdgeOptions()
         if settings.headless:
-            edge_options.add_argument("--headless")
-
-        edge_options.add_argument("--start-maximized")
+            options.add_argument("--headless")
 
         service = EdgeService(EdgeChromiumDriverManager().install())
-        driver_instance = webdriver.Edge(service=service, options=edge_options)
+        driver_instance = webdriver.Edge(service=service, options=options)
 
     else:
         raise ValueError(f"Unsupported browser: {settings.browser}")
 
-    # Configure driver timeouts
+    # Timeouts
     driver_instance.implicitly_wait(settings.implicit_wait)
     driver_instance.set_page_load_timeout(settings.page_load_timeout)
 
-    # Maximize window if configured
-    if settings.maximize_window and not settings.headless:
-        driver_instance.maximize_window()
-    else:
-        driver_instance.set_window_size(settings.window_width, settings.window_height)
+    # IMPORTANT: only resize/maximize when NOT headless
+    if not settings.headless:
+        if settings.maximize_window:
+            driver_instance.maximize_window()
+        else:
+            driver_instance.set_window_size(
+                settings.window_width, settings.window_height
+            )
 
-    logger.info(f"   ✅ Browser launched: {settings.browser}")
-
+    logger.info("✅ Browser ready")
     yield driver_instance
 
-    logger.info(f"🌐 Closing {settings.browser} browser")
+    logger.info("🌐 Closing browser")
     driver_instance.quit()
 
 
-# --- Page Object Fixtures ---
-
-
+# ------------------------------------------------------------------------------
+# Page Fixtures
+# ------------------------------------------------------------------------------
 @pytest.fixture
-def home_page(driver: webdriver.Remote) -> HomePage:
-    """HomePage fixture."""
-    logger = logging.getLogger(__name__)
-    logger.info("🏗️ Creating HomePage fixture")
+def home_page(driver) -> HomePage:
     return HomePage(driver)
 
 
 @pytest.fixture
-def login_page(driver: webdriver.Remote) -> LoginPage:
-    """LoginPage fixture."""
-    logger = logging.getLogger(__name__)
-    logger.info("🏗️ Creating LoginPage fixture")
+def login_page(driver) -> LoginPage:
     return LoginPage(driver)
 
 
 @pytest.fixture
-def self_service_page(authenticated_driver: webdriver.Remote) -> SelfServicePage:
-    """Self Service Page fixture."""
-    logger = logging.getLogger(__name__)
-    logger.info("🏗️ Creating SelfServicePage fixture")
+def self_service_page(authenticated_driver) -> SelfServicePage:
     return SelfServicePage(authenticated_driver)
 
 
-# --- Utility Fixtures ---
-
-
+# ------------------------------------------------------------------------------
+# Authenticated Driver Fixture
+# ------------------------------------------------------------------------------
 @pytest.fixture
-def authenticated_driver(driver: webdriver.Remote) -> Generator[webdriver.Remote, None, None]:
-    """
-    Driver fixture that is already authenticated.
-    Useful for tests that require a logged-in state.
-    """
+def authenticated_driver(driver) -> Generator[webdriver.Remote, None, None]:
     logger = logging.getLogger(__name__)
     logger.info("\n" + "=" * 60)
     logger.info("🔐 AUTHENTICATION SETUP")
@@ -178,118 +150,63 @@ def authenticated_driver(driver: webdriver.Remote) -> Generator[webdriver.Remote
     try:
         login_page = LoginPage(driver)
 
-        logger.info("📋 Step 1: Navigate to login page")
         login_page.go_to_login_page()
-
-        logger.info("📋 Step 2: Perform login")
         login_page.login_user(
             email=settings.test_username,
-            password=settings.test_password
+            password=settings.test_password,
         )
-
-        logger.info("📋 Step 3: Verify login successful")
         login_page.verify_login_successful_load_companies()
 
-        logger.info("📋 Step 4: Click default company link")
         self_service_page = login_page.click_default_company_link()
-
-        logger.info("📋 Step 5: Verify self-service page loads")
         self_service_page.verify_self_service_page_loads()
 
         logger.info("✅ Authentication successful")
-        logger.info("=" * 60 + "\n")
-
         yield driver
 
-        # Teardown (logout)
+    finally:
         logger.info("\n" + "=" * 60)
         logger.info("🔐 AUTHENTICATION TEARDOWN")
         logger.info("=" * 60)
-        logger.info("📋 Logging out...")
 
-        self_service_page.click_to_logout()
-
-        logger.info("✅ Logout successful")
-        logger.info("=" * 60 + "\n")
-
-    except Exception as e:
-        logger.error(f"❌ Authentication setup failed: {e}")
-
-        # Take screenshot on failure
         try:
-            timestamp = int(datetime.now().timestamp())
-            screenshot_path = f"{settings.screenshot_dir}auth_error_{timestamp}.png"
-            driver.save_screenshot(screenshot_path)
-            logger.error(f"   📸 Error screenshot: {screenshot_path}")
-        except:
-            pass
-
-        raise
+            SelfServicePage(driver).click_to_logout()
+            logger.info("✅ Logout successful")
+        except Exception:
+            logger.warning("⚠️ Logout skipped (page not available)")
 
 
-# --- Pytest Hooks ---
-
-
+# ------------------------------------------------------------------------------
+# Pytest Hooks
+# ------------------------------------------------------------------------------
 def pytest_configure(config):
-    """Configure custom pytest markers."""
-    logger = logging.getLogger(__name__)
-    logger.info("⚙️ Configuring pytest markers")
-
-    config.addinivalue_line("markers", "smoke: mark test as smoke test")
-    config.addinivalue_line("markers", "regression: mark test as regression test")
-    config.addinivalue_line("markers", "login: mark test as login-related")
-
-
-def pytest_collection_modifyitems(config, items):
-    """Modify test collection based on markers or config."""
-    logger = logging.getLogger(__name__)
-    logger.info(f"📊 Collected {len(items)} test(s)")
+    config.addinivalue_line("markers", "smoke")
+    config.addinivalue_line("markers", "regression")
+    config.addinivalue_line("markers", "login")
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    """Hook to log test results and take screenshots on failure."""
     outcome = yield
     report = outcome.get_result()
-
     logger = logging.getLogger(__name__)
 
-    if report.when == "call":
-        if report.passed:
-            logger.info(f"✅ TEST PASSED: {item.nodeid}")
-        elif report.failed:
-            logger.error(f"❌ TEST FAILED: {item.nodeid}")
-            logger.error(f"   Failure reason: {str(report.longrepr)[:200]}...")
-
-            # Take screenshot on failure if enabled
-            if settings.screenshot_on_failure:
-                try:
-                    driver = item.funcargs.get('driver') or item.funcargs.get('authenticated_driver')
-                    if driver:
-                        timestamp = int(datetime.now().timestamp())
-                        test_name = item.name.replace(" ", "_").replace("/", "_")
-                        screenshot_path = f"{settings.screenshot_dir}failure_{test_name}_{timestamp}.png"
-                        driver.save_screenshot(screenshot_path)
-                        logger.error(f"   📸 Failure screenshot: {screenshot_path}")
-                except Exception as e:
-                    logger.warning(f"   ⚠️ Could not take failure screenshot: {e}")
-
-        elif report.skipped:
-            logger.warning(f"⏭️ TEST SKIPPED: {item.nodeid}")
+    if report.when == "call" and report.failed and settings.screenshot_on_failure:
+        driver = item.funcargs.get("driver") or item.funcargs.get("authenticated_driver")
+        if driver:
+            ts = int(datetime.now().timestamp())
+            name = item.name.replace(" ", "_")
+            path = f"{settings.screenshot_dir}failure_{name}_{ts}.png"
+            driver.save_screenshot(path)
+            logger.error(f"📸 Screenshot saved: {path}")
 
 
 @pytest.fixture(autouse=True)
 def log_test_info(request):
-    """Automatically log test start and end for each test."""
     logger = logging.getLogger(__name__)
-    test_name = request.node.name
-
-    logger.info(f"\n{'#' * 80}")
-    logger.info(f"🧪 STARTING TEST: {test_name}")
-    logger.info(f"{'#' * 80}\n")
-
+    logger.info("\n" + "#" * 80)
+    logger.info(f"🧪 STARTING TEST: {request.node.name}")
+    logger.info("#" * 80)
     yield
-
-    logger.info(f"\n{'#' * 80}")
-    logger.info(f"🏁 FINISHED TEST: {test_name}")
-    logger.info(f"{'#' * 80}\n")
+    logger.info("\n" + "#" * 80)
+    logger.info(f"🏁 FINISHED TEST: {request.node.name}")
+    logger.info("#" * 80)

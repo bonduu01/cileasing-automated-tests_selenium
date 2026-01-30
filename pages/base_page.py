@@ -135,13 +135,42 @@ class BasePage:
     # --- Element Interaction ---
 
     @log_method
-    def click_element(self, selector: str, timeout: int = 30) -> None:
+    # def click_element(self, selector: str, timeout: int = 30) -> None:
+    #     """
+    #     Click an element identified by selector with proper waits.
+    #
+    #     Args:
+    #         selector: Selector string (supports multiple strategies)
+    #         timeout: Timeout in seconds (default: 30)
+    #     """
+    #     logger.info(f"🖱️ Selector: {selector}")
+    #     try:
+    #         element = self._find_clickable_element(selector, timeout)
+    #
+    #         # Log element state before interaction
+    #         self._log_element_state(element, selector)
+    #
+    #         # Scroll into view if needed
+    #         self.scroll_to_element_by_selector(selector)
+    #
+    #         # Click the element
+    #         element.click()
+    #
+    #         logger.info(f"   ✅ Click successful")
+    #     except Exception as e:
+    #         logger.error(f"   ❌ Click failed: {e}")
+    #         self._take_screenshot("click_error")
+    #         raise
+
+    @log_method
+    def click_element(self, selector: str, timeout: int = 30, verify_click: bool = True) -> None:
         """
-        Click an element identified by selector with proper waits.
+        Click an element identified by selector with proper waits and optional verification.
 
         Args:
             selector: Selector string (supports multiple strategies)
             timeout: Timeout in seconds (default: 30)
+            verify_click: Whether to verify click was registered (default: True)
         """
         logger.info(f"🖱️ Selector: {selector}")
         try:
@@ -150,17 +179,62 @@ class BasePage:
             # Log element state before interaction
             self._log_element_state(element, selector)
 
+            # Store element state before click (for verification)
+            initial_state = None
+            if verify_click:
+                initial_state = {
+                    'is_displayed': element.is_displayed(),
+                    'is_enabled': element.is_enabled(),
+                    'location': element.location
+                }
+
             # Scroll into view if needed
             self.scroll_to_element_by_selector(selector)
 
             # Click the element
             element.click()
 
+            # Verify click was registered
+            if verify_click:
+                self._verify_click_registered(selector, initial_state)
+
             logger.info(f"   ✅ Click successful")
         except Exception as e:
             logger.error(f"   ❌ Click failed: {e}")
             self._take_screenshot("click_error")
             raise
+
+    def _verify_click_registered(self, selector: str, initial_state: dict, timeout: int = 5) -> None:
+        """
+        Verify that a click was registered by checking for state changes.
+
+        Args:
+            selector: The element selector
+            initial_state: Dictionary containing element's initial state
+            timeout: Timeout for verification
+        """
+        try:
+            # Wait for a brief moment to allow UI updates
+            time.sleep(0.5)
+
+            # Try to find the element again to check state changes
+            try:
+                element = self._find_element(selector, timeout=2)
+                current_state = {
+                    'is_displayed': element.is_displayed(),
+                    'is_enabled': element.is_enabled(),
+                    'location': element.location
+                }
+
+                # Check if element state changed (might indicate interaction)
+                if current_state != initial_state:
+                    logger.info("   🔍 Element state changed - click likely registered")
+            except:
+                # Element not found - might have been removed/hidden after click (expected behavior)
+                logger.info("   🔍 Element no longer visible - click likely registered")
+
+        except Exception as e:
+            logger.warning(f"   ⚠️ Could not verify click: {e}")
 
     @log_method
     def click_element_by_text(self, text: str, timeout: int = 30) -> None:

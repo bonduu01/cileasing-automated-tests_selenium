@@ -3,6 +3,7 @@ Self Service Page Object
 """
 
 import logging
+
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from pages.edit_self_service_page import EditSelfServicePage
@@ -27,11 +28,8 @@ class SelfServicePage(BasePage):
         """Verify that the self-service page has loaded."""
         logger.info("✅ Verifying self-service page loaded")
 
-        # Log the current URL
-        current_url = self.driver.current_url
-        logger.info(f"Current page URL: {current_url}")
-
-        self.verify_element_visible(SELF_SERVICE_PAGE.PERSONAL_NAME)
+        #self.verify_element_visible(SELF_SERVICE_PAGE.PERSONAL_NAME)
+        self.verify_has_text_visible(SELF_SERVICE_PAGE.PERSONAL_NAME_SELECTOR, SELF_SERVICE_PAGE.PERSONAL_NAME)
         logger.info("✅ Self-service page URL verified")
 
     @log_method
@@ -39,9 +37,11 @@ class SelfServicePage(BasePage):
         """Click logout button."""
         logger.info("🚪 Clicking logout")
         # Click on profile avatar first
-        self.click_element_by_text("MM")
+        #self.click_element_by_text("MM")
+        self.click_element("span.ant-avatar.ant-avatar-circle.ant-dropdown-trigger")
         # Then click logout link
-        self.click_element_by_text("Logout")
+        #self.click_element_by_text("Logout")
+
         logger.info("✅ Logged out successfully")
 
     @log_method

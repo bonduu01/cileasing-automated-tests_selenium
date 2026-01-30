@@ -1,9 +1,8 @@
-"""
-Login Page Object
-"""
-
-import logging
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import TimeoutException
+import time
+import logging
 
 from pages.base_page import BasePage
 from pages.self_service_page import SelfServicePage
@@ -114,9 +113,40 @@ class LoginPage(BasePage):
     @log_method
     @log_page_state
     def click_default_company_link(self) -> SelfServicePage:
-        """Click the default company link."""
+        """
+        Click the default company link, verify click action,
+        and wait 5 seconds to confirm interaction success.
+        """
         logger.info("🖱️ Clicking default company link")
-        # Use link text to find and click DEFAULT
-        self.click_element_by_text(LOGIN_PAGE.DEFAULT_LINK)
+
+        # Ensure element is clickable before interaction
+        self.wait_for_selector(
+            LOGIN_PAGE.DEFAULT_LINK,
+            state="clickable",
+            timeout=30
+        )
+
+        # Capture initial URL to detect navigation
+        initial_url = self.driver.current_url
+
+        # Perform click using BasePage abstraction
+        self.click_element(LOGIN_PAGE.DEFAULT_LINK)
+
+        logger.info("🔍 Verifying click was successful")
+
+        try:
+            # Wait for navigation or page state change
+            WebDriverWait(self.driver, 10).until(
+                lambda driver: driver.current_url != initial_url
+            )
+            logger.info("✅ Click confirmed - page navigation detected")
+        except TimeoutException:
+            logger.warning("⚠️ No URL change detected; assuming SPA behavior")
+
+        # ⏱️ Explicit post-click wait (as requested)
+        logger.info("⏳ Waiting 5 seconds to confirm click event")
+        time.sleep(5)
+
         logger.info("✅ Navigating to Self Service page")
         return SelfServicePage(self.driver)
+
