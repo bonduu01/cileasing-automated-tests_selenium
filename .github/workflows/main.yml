@@ -20,7 +20,8 @@ on:
           - smoke
           - login
           - regression
-
+permissions:
+  contents: write
 env:
   PYTHON_VERSION: '3.11'
   ALLURE_VERSION: '2.24.0'
