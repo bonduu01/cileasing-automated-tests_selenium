@@ -20,6 +20,9 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from config import settings
 from pages import HomePage, LoginPage, SelfServicePage
 
+import allure
+from allure_commons.types import AttachmentType
+
 # ------------------------------------------------------------------------------
 # Directory setup
 # ------------------------------------------------------------------------------
@@ -210,3 +213,38 @@ def log_test_info(request):
     logger.info("\n" + "#" * 80)
     logger.info(f"🏁 FINISHED TEST: {request.node.name}")
     logger.info("#" * 80)
+
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    """
+    Attach screenshot to Allure report on test failure.
+    This hook runs after each test phase (setup, call, teardown).
+    """
+    logger = logging.getLogger(__name__)
+    outcome = yield
+    report = outcome.get_result()
+
+    if report.when == "call" and report.failed:
+        # Get the driver from the test's fixture
+        driver = None
+        if hasattr(item, 'funcargs'):
+            if 'driver' in item.funcargs:
+                driver = item.funcargs['driver']
+            elif 'login_page' in item.funcargs:
+                driver = item.funcargs['login_page'].driver
+            elif 'self_service_page' in item.funcargs:
+                driver = item.funcargs['self_service_page'].driver
+
+        if driver:
+            # Take screenshot and attach to Allure
+            try:
+                screenshot = driver.get_screenshot_as_png()
+                allure.attach(
+                    screenshot,
+                    name=f"failure_{item.name}",
+                    attachment_type=AttachmentType.PNG
+                )
+                logger.info(f"📸 Screenshot attached to Allure report")
+            except Exception as e:
+                logger.warning(f"⚠️ Could not attach screenshot to Allure: {e}")
