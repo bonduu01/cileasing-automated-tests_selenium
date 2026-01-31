@@ -51,11 +51,13 @@ class TestUserLogins:
 
         logger.info("✅ Successfully navigated to Self Service page")
 
-        # logger.info("📋 Step 5: Verify self-service page loads")
-        # self_service_page.verify_self_service_page_loads()
-        #
+        logger.info("📋 Step 5: Verify self-service page loads")
+        self_service_page.verify_self_service_page_loads()
+
         logger.info("📋 Step 6: Logout")
         self_service_page.click_to_logout()
+
+        logger.info("✅ Test completed successfully")
 
     @pytest.mark.smoke
     @pytest.mark.login

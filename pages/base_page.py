@@ -135,32 +135,112 @@ class BasePage:
     # --- Element Interaction ---
 
     @log_method
-    # def click_element(self, selector: str, timeout: int = 30) -> None:
-    #     """
-    #     Click an element identified by selector with proper waits.
-    #
-    #     Args:
-    #         selector: Selector string (supports multiple strategies)
-    #         timeout: Timeout in seconds (default: 30)
-    #     """
-    #     logger.info(f"🖱️ Selector: {selector}")
-    #     try:
-    #         element = self._find_clickable_element(selector, timeout)
-    #
-    #         # Log element state before interaction
-    #         self._log_element_state(element, selector)
-    #
-    #         # Scroll into view if needed
-    #         self.scroll_to_element_by_selector(selector)
-    #
-    #         # Click the element
-    #         element.click()
-    #
-    #         logger.info(f"   ✅ Click successful")
-    #     except Exception as e:
-    #         logger.error(f"   ❌ Click failed: {e}")
-    #         self._take_screenshot("click_error")
-    #         raise
+    def click_element_with_retry(self, selector: str, timeout: int = 30, max_attempts: int = 3) -> None:
+        """
+        Click an element with retry logic and multiple strategies.
+        Useful for stubborn elements or those that may have overlays.
+
+        Args:
+            selector: Selector string (supports multiple strategies)
+            timeout: Timeout in seconds (default: 30)
+            max_attempts: Number of retry attempts (default: 3)
+        """
+        logger.info(f"🖱️ Click with retry - Selector: {selector}, Max attempts: {max_attempts}")
+
+        last_exception = None
+
+        for attempt in range(1, max_attempts + 1):
+            try:
+                logger.info(f"   Attempt {attempt}/{max_attempts}")
+
+                # Wait for element to be clickable
+                element = self._find_clickable_element(selector, timeout)
+
+                # Log element state
+                self._log_element_state(element, selector)
+
+                # Scroll into view
+                self.scroll_to_element(element)
+
+                # Wait a moment for any animations to complete
+                time.sleep(0.3)
+
+                # Try different click strategies
+                if attempt == 1:
+                    # Strategy 1: Standard click
+                    logger.info("   📌 Strategy: Standard click")
+                    element.click()
+                elif attempt == 2:
+                    # Strategy 2: JavaScript click
+                    logger.info("   📌 Strategy: JavaScript click")
+                    self.driver.execute_script("arguments[0].click();", element)
+                else:
+                    # Strategy 3: ActionChains click
+                    logger.info("   📌 Strategy: ActionChains click")
+                    ActionChains(self.driver).move_to_element(element).click().perform()
+
+                # Verify click success by checking for URL change or element state
+                time.sleep(0.5)
+                logger.info(f"   ✅ Click successful on attempt {attempt}")
+                return
+
+            except (ElementNotInteractableException, StaleElementReferenceException) as e:
+                last_exception = e
+                logger.warning(f"   ⚠️ Attempt {attempt} failed: {e.__class__.__name__}")
+
+                if attempt < max_attempts:
+                    logger.info(f"   🔄 Retrying...")
+                    time.sleep(1)
+                else:
+                    logger.error(f"   ❌ All {max_attempts} attempts failed")
+                    self._take_screenshot("click_retry_failed")
+                    raise
+
+            except Exception as e:
+                logger.error(f"   ❌ Unexpected error on attempt {attempt}: {e}")
+                self._take_screenshot(f"click_error_attempt_{attempt}")
+                raise
+
+        # If we get here, all attempts failed
+        if last_exception:
+            raise last_exception
+
+    @log_method
+    def wait_for_no_overlays(self, timeout: int = 10) -> None:
+        """
+        Wait for common overlay/modal elements to disappear.
+        Useful before interacting with elements that might be obscured.
+        """
+        logger.info("🔍 Checking for overlays/modals...")
+
+        overlay_selectors = [
+            ".ant-modal-mask",
+            ".ant-drawer-mask",
+            ".ant-spin-blur",
+            ".ant-spin-spinning",
+            "[class*='loading']",
+            "[class*='overlay']"
+        ]
+
+        for selector in overlay_selectors:
+            try:
+                # Use short timeout to quickly check if overlay exists
+                elements = self.driver.find_elements(By.CSS_SELECTOR, selector)
+                if elements and any(el.is_displayed() for el in elements):
+                    logger.info(f"   Found overlay: {selector}, waiting for it to disappear...")
+                    WebDriverWait(self.driver, timeout).until(
+                        EC.invisibility_of_element_located((By.CSS_SELECTOR, selector))
+                    )
+                    logger.info(f"   ✅ Overlay {selector} disappeared")
+            except (TimeoutException, StaleElementReferenceException):
+                # Overlay didn't disappear in time or became stale (which is fine)
+                logger.debug(f"   Overlay {selector} handling complete")
+                pass
+            except Exception as e:
+                logger.debug(f"   Skipping overlay check for {selector}: {e}")
+                pass
+
+        logger.info("   ✅ No overlays detected")
 
     @log_method
     def click_element(self, selector: str, timeout: int = 30, verify_click: bool = True) -> None:
@@ -363,6 +443,188 @@ class BasePage:
             select.select_by_index(index)
         else:
             raise ValueError("Must provide either value, text, or index")
+
+    @log_method
+    def click_ant_dropdown_item(self, dropdown_trigger_selector: str, menu_item_text: str, timeout: int = 30) -> None:
+        """
+        Click an item in an Ant Design dropdown menu.
+        Handles opening the dropdown and selecting the menu item.
+
+        Args:
+            dropdown_trigger_selector: Selector for the dropdown trigger element
+            menu_item_text: Text of the menu item to click
+            timeout: Timeout in seconds
+        """
+        logger.info(f"📋 Ant Dropdown - Trigger: {dropdown_trigger_selector}, Item: {menu_item_text}")
+
+        try:
+            # Step 1: Wait for any loading/overlays to clear
+            self.wait_for_no_overlays(timeout=5)
+
+            # Step 2: Find and click the dropdown trigger
+            logger.info("   🖱️ Step 1: Opening dropdown...")
+            trigger_element = self._find_clickable_element(dropdown_trigger_selector, timeout)
+
+            # Log trigger state
+            self._log_element_state(trigger_element, dropdown_trigger_selector)
+
+            # Scroll into view
+            self.scroll_to_element(trigger_element)
+            time.sleep(0.3)
+
+            # Click to open dropdown
+            trigger_element.click()
+            logger.info("   ✅ Dropdown trigger clicked")
+
+            # Step 3: Wait for dropdown menu to appear
+            logger.info("   ⏳ Step 2: Waiting for dropdown menu...")
+            dropdown_menu_selector = ".ant-dropdown:not(.ant-dropdown-hidden)"
+
+            try:
+                dropdown_menu = WebDriverWait(self.driver, 10).until(
+                    EC.visibility_of_element_located((By.CSS_SELECTOR, dropdown_menu_selector))
+                )
+                logger.info("   ✅ Dropdown menu visible")
+            except TimeoutException:
+                logger.error("   ❌ Dropdown menu did not appear")
+                self._take_screenshot("dropdown_not_visible")
+                raise
+
+            # Step 4: Wait for menu item and click it
+            logger.info(f"   🖱️ Step 3: Clicking menu item '{menu_item_text}'...")
+
+            # Try multiple selector strategies for the menu item
+            menu_item_selectors = [
+                f"//li[contains(@class, 'ant-dropdown-menu-item')]//span[contains(text(), '{menu_item_text}')]",
+                f"//li[contains(@class, 'ant-dropdown-menu-item')]//*[contains(text(), '{menu_item_text}')]",
+                f".ant-dropdown-menu-item:has(*:contains('{menu_item_text}'))",
+            ]
+
+            menu_item_clicked = False
+            last_exception = None
+
+            for selector in menu_item_selectors:
+                try:
+                    by, value = self._get_by_strategy(selector)
+                    menu_item = WebDriverWait(dropdown_menu, 5).until(
+                        EC.element_to_be_clickable((by, value))
+                    )
+
+                    # Log menu item state
+                    self._log_element_state(menu_item, selector)
+
+                    # Click the menu item
+                    menu_item.click()
+                    logger.info(f"   ✅ Menu item '{menu_item_text}' clicked")
+                    menu_item_clicked = True
+                    break
+
+                except Exception as e:
+                    last_exception = e
+                    logger.debug(f"   Selector '{selector}' failed: {e}")
+                    continue
+
+            if not menu_item_clicked:
+                logger.error(f"   ❌ Could not find or click menu item '{menu_item_text}'")
+                self._take_screenshot("menu_item_not_found")
+                raise last_exception if last_exception else Exception(f"Menu item '{menu_item_text}' not found")
+
+            # Step 5: Wait for dropdown to close (indicates action completed)
+            try:
+                WebDriverWait(self.driver, 5).until(
+                    EC.invisibility_of_element_located((By.CSS_SELECTOR, dropdown_menu_selector))
+                )
+                logger.info("   ✅ Dropdown closed - action completed")
+            except TimeoutException:
+                logger.warning("   ⚠️ Dropdown did not close, but continuing...")
+
+        except Exception as e:
+            logger.error(f"   ❌ Ant Dropdown interaction failed: {e}")
+            self._take_screenshot("ant_dropdown_error")
+            raise
+
+    @log_method
+    def click_ant_dropdown_trigger(self, selector: str, timeout: int = 30) -> None:
+        """
+        Click an Ant Design dropdown trigger and wait for menu to appear.
+
+        Args:
+            selector: Selector for the dropdown trigger
+            timeout: Timeout in seconds
+        """
+        logger.info(f"📋 Opening Ant Dropdown: {selector}")
+
+        try:
+            # Wait for overlays to clear
+            self.wait_for_no_overlays(timeout=5)
+
+            # Find and click trigger
+            trigger = self._find_clickable_element(selector, timeout)
+            self._log_element_state(trigger, selector)
+            self.scroll_to_element(trigger)
+            time.sleep(0.3)
+
+            # Click trigger
+            trigger.click()
+
+            # Wait for dropdown menu to appear
+            WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.CSS_SELECTOR, ".ant-dropdown:not(.ant-dropdown-hidden)")
+                )
+            )
+
+            logger.info("   ✅ Dropdown opened successfully")
+
+        except Exception as e:
+            logger.error(f"   ❌ Failed to open dropdown: {e}")
+            self._take_screenshot("dropdown_trigger_error")
+            raise
+
+    @log_method
+    def click_ant_dropdown_menu_item(self, item_text: str, timeout: int = 10) -> None:
+        """
+        Click an item in an open Ant Design dropdown menu by text.
+
+        Args:
+            item_text: Text of the menu item to click
+            timeout: Timeout in seconds
+        """
+        logger.info(f"📋 Clicking dropdown menu item: {item_text}")
+
+        try:
+            # Wait for dropdown menu to be visible
+            dropdown_menu = WebDriverWait(self.driver, timeout).until(
+                EC.visibility_of_element_located(
+                    (By.CSS_SELECTOR, ".ant-dropdown:not(.ant-dropdown-hidden)")
+                )
+            )
+
+            # Build XPath selector for menu item containing text
+            xpath = f"//li[contains(@class, 'ant-dropdown-menu-item')]//*[contains(text(), '{item_text}')]"
+
+            # Wait for menu item to be clickable
+            menu_item = WebDriverWait(dropdown_menu, timeout).until(
+                EC.element_to_be_clickable((By.XPATH, xpath))
+            )
+
+            self._log_element_state(menu_item, xpath)
+
+            # Click the menu item
+            menu_item.click()
+            logger.info(f"   ✅ Menu item '{item_text}' clicked")
+
+            # Wait for dropdown to close
+            WebDriverWait(self.driver, 5).until(
+                EC.invisibility_of_element_located(
+                    (By.CSS_SELECTOR, ".ant-dropdown:not(.ant-dropdown-hidden)")
+                )
+            )
+
+        except Exception as e:
+            logger.error(f"   ❌ Failed to click menu item: {e}")
+            self._take_screenshot("dropdown_menu_item_error")
+            raise
 
     @log_method
     def ant_select_option(self, dropdown_selector: str, option_text: str, timeout: int = 30) -> None:

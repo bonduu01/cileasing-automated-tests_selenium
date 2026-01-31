@@ -1,6 +1,9 @@
+from selenium.webdriver import ActionChains
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 import time
 import logging
 
@@ -114,39 +117,118 @@ class LoginPage(BasePage):
     @log_page_state
     def click_default_company_link(self) -> SelfServicePage:
         """
-        Click the default company link, verify click action,
-        and wait 5 seconds to confirm interaction success.
+        Click the default company link and verify navigation to Self Service page.
+        Enhanced for headless mode compatibility.
         """
         logger.info("🖱️ Clicking default company link")
 
-        # Ensure element is clickable before interaction
-        self.wait_for_selector(
-            LOGIN_PAGE.DEFAULT_LINK,
-            state="clickable",
-            timeout=30
-        )
-
-        # Capture initial URL to detect navigation
-        initial_url = self.driver.current_url
-
-        # Perform click using BasePage abstraction
-        self.click_element(LOGIN_PAGE.DEFAULT_LINK)
-
-        logger.info("🔍 Verifying click was successful")
-
+        # Wait for any loading states to complete
         try:
-            # Wait for navigation or page state change
-            WebDriverWait(self.driver, 10).until(
-                lambda driver: driver.current_url != initial_url
-            )
-            logger.info("✅ Click confirmed - page navigation detected")
-        except TimeoutException:
-            logger.warning("⚠️ No URL change detected; assuming SPA behavior")
+            logger.info("⏳ Checking for loading indicators...")
+            loading_selector = ".ant-spin-spinning"
+            # Use immediate check instead of waiting
+            loading_elements = self.driver.find_elements(By.CSS_SELECTOR, loading_selector)
+            if loading_elements and any(el.is_displayed() for el in loading_elements):
+                logger.info("   Loading indicator found, waiting for it to disappear...")
+                WebDriverWait(self.driver, 15).until(
+                    EC.invisibility_of_element_located((By.CSS_SELECTOR, loading_selector))
+                )
+                logger.info("   ✅ Loading complete")
+            else:
+                logger.info("   ℹ️ No loading indicators detected")
+        except Exception as e:
+            logger.info(f"   ℹ️ Loading check complete: {e}")
 
-        # ⏱️ Explicit post-click wait (as requested)
-        logger.info("⏳ Waiting 5 seconds to confirm click event")
-        time.sleep(5)
+        # Capture initial state
+        initial_url = self.driver.current_url
+        logger.info(f"   📍 Current URL: {initial_url}")
 
-        logger.info("✅ Navigating to Self Service page")
+        # Try multiple click strategies
+        clicked = False
+        click_strategies = [
+            ("Standard click with retry", lambda: self.click_element_with_retry(
+                LOGIN_PAGE.DEFAULT_LINK, timeout=30, max_attempts=3
+            )),
+            ("JavaScript click", lambda: self.click_with_javascript(LOGIN_PAGE.DEFAULT_LINK)),
+            ("ActionChains click", lambda: self._action_chains_click(LOGIN_PAGE.DEFAULT_LINK))
+        ]
+
+        for strategy_name, click_func in click_strategies:
+            try:
+                logger.info(f"   Trying: {strategy_name}")
+                click_func()
+                clicked = True
+
+                # Wait for URL change or specific element
+                try:
+                    WebDriverWait(self.driver, 15).until(
+                        lambda driver: driver.current_url != initial_url or
+                                       self._check_for_self_service_elements()
+                    )
+                    logger.info(f"   ✅ Navigation successful with {strategy_name}")
+                    break
+                except TimeoutException:
+                    logger.warning(f"   ⚠️ No navigation detected with {strategy_name}")
+                    if strategy_name == click_strategies[-1][0]:
+                        # Last strategy, accept it anyway
+                        break
+                    continue
+
+            except Exception as e:
+                logger.warning(f"   ⚠️ {strategy_name} failed: {e}")
+                if strategy_name == click_strategies[-1][0]:
+                    raise
+                continue
+
+        # Final URL check
+        final_url = self.driver.current_url
+        logger.info(f"   📍 Final URL: {final_url}")
+
+        if final_url != initial_url:
+            logger.info(f"   ✅ URL changed - navigation detected")
+        else:
+            logger.warning(f"   ⚠️ URL unchanged - checking for SPA behavior")
+            # Check if we can find self-service page elements
+            if self._check_for_self_service_elements():
+                logger.info("   ✅ Self-service page elements detected")
+            else:
+                logger.error("   ❌ Cannot confirm navigation to self-service page")
+                self._take_screenshot("navigation_verification_failed")
+
+        # Brief wait for page stability
+        logger.info("⏳ Waiting for page to stabilize...")
+        time.sleep(2)
+
+        logger.info("✅ Transitioning to Self Service page object")
         return SelfServicePage(self.driver)
 
+    def _action_chains_click(self, selector: str) -> None:
+        """Click using ActionChains."""
+        element = self._find_clickable_element(selector, timeout=30)
+        self.scroll_to_element(element)
+        time.sleep(0.3)
+        ActionChains(self.driver).move_to_element(element).click().perform()
+
+    def _check_for_self_service_elements(self) -> bool:
+        """Check if self-service page elements are present."""
+        try:
+            # Add selectors that are unique to the self-service page
+            selectors = [
+                "//h1[contains(text(), 'Self Service')]",
+                "//div[contains(@class, 'self-service')]",
+                "span.ant-avatar.ant-dropdown-trigger",  # Profile avatar
+            ]
+
+            for selector in selectors:
+                try:
+                    by, value = self._get_by_strategy(selector)
+                    element = self.driver.find_element(by, value)
+                    if element.is_displayed():
+                        logger.info(f"   Found element: {selector}")
+                        return True
+                except:
+                    continue
+
+            return False
+        except:
+            return False

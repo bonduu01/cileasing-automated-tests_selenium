@@ -29,7 +29,12 @@ class LoginPageSelectors:
     ERROR_USERNAME_BLANK: str = "Email cannot be blank"
     ERROR_INVALID_CREDENTIALS: str = "Invalid username or password"
     #DEFAULT_LINK: str = "xpath=//button[@title='DEFAULT']"
+    # Primary selector (most specific)
     DEFAULT_LINK: str = "button[title='DEFAULT']"
+    # Backup selectors (use these if primary fails)
+    DEFAULT_LINK_BY_CLASS: str = "button.p-4.bg-\\[\\#363C4C\\]"
+    DEFAULT_LINK_BY_TEXT: str = "//button[.//div[contains(text(), 'DEFAULT')]]"
+    DEFAULT_LINK_BY_AVATAR: str = "//button[.//span[contains(@class, 'ant-avatar-string') and text()='D']]"
 
 
 @dataclass(frozen=True)
@@ -53,6 +58,14 @@ class SelfServicePageSelectors:
     EDIT_BVN_BUTTON: str = "button"  # Contains SVG with specific path
     IDENTITY_BUTTON: str = "button"  # Contains text 'Identity'
     CLICK_IDENTITY_ADD_BUTTON: str = "button"  # Contains text 'Add New'
+    PROFILE_AVATAR: str = "span.ant-avatar.ant-dropdown-trigger"
+    PROFILE_AVATAR_BY_TEXT: str = "//span[contains(@class, 'ant-avatar-string') and text()='MM']"
+    PROFILE_AVATAR_PARENT: str = "//span[contains(@class, 'ant-avatar-string') and text()='MM']/parent::span"
+
+    # Logout menu item (multiple strategies)
+    LOGOUT_MENU_ITEM: str = "//li[contains(@class, 'ant-dropdown-menu-item')]//p[contains(text(), 'Logout')]"
+    LOGOUT_MENU_ITEM_BY_CLASS: str = ".ant-dropdown-menu-item .text-danger"
+    LOGOUT_MENU_ITEM_TEXT: str = "Logout"
 
 
 @dataclass(frozen=True)
