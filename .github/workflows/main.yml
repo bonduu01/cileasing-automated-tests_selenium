@@ -28,7 +28,7 @@ permissions:
 
 env:
   PYTHON_VERSION: '3.11'
-  ALLURE_VERSION: '2.24.0'
+  ALLURE_VERSION: '2.30.0'
 
 jobs:
   # Job 1: Run Smoke Tests
@@ -222,49 +222,116 @@ jobs:
         run: |
           mkdir -p allure-results
           echo "Merging allure results from all test suites..."
-          find all-results -type f -name "*.json" -exec cp {} allure-results/ \;
-          find all-results -type f -name "*.txt" -exec cp {} allure-results/ \;
-          find all-results -type f -name "*.properties" -exec cp {} allure-results/ \;
           
-          # Copy attachments (screenshots)
-          if [ -d "all-results/smoke-test-results/allure-results" ]; then
-            find all-results/smoke-test-results/allure-results -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.txt" -o -name "*.json" \) -exec cp {} allure-results/ \; 2>/dev/null || true
-          fi
-          if [ -d "all-results/login-test-results/allure-results" ]; then
-            find all-results/login-test-results/allure-results -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.txt" -o -name "*.json" \) -exec cp {} allure-results/ \; 2>/dev/null || true
-          fi
-          if [ -d "all-results/regression-test-results/allure-results" ]; then
-            find all-results/regression-test-results/allure-results -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.txt" -o -name "*.json" \) -exec cp {} allure-results/ \; 2>/dev/null || true
-          fi
+          # Copy all allure result files
+          find all-results -type f \( -name "*.json" -o -name "*.txt" -o -name "*.xml" -o -name "*.properties" \) \
+            -exec cp {} allure-results/ \; 2>/dev/null || true
+          
+          # Copy attachments (screenshots, etc.)
+          find all-results -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.gif" \) \
+            -exec cp {} allure-results/ \; 2>/dev/null || true
           
           echo "Merged results:"
-          ls -la allure-results/
+          ls -la allure-results/ | head -20
 
-      - name: Load test report history
-        uses: actions/checkout@v4
-        if: always()
+      - name: Get Allure history from gh-pages
         continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages
+        run: |
+          echo "Attempting to fetch allure history..."
+          
+          # Try to checkout gh-pages branch
+          if git ls-remote --exit-code --heads origin gh-pages; then
+            echo "gh-pages branch exists, fetching history..."
+            git fetch origin gh-pages:gh-pages
+            git checkout gh-pages
+            
+            if [ -d "allure-history" ]; then
+              echo "Found allure-history directory"
+              mkdir -p /tmp/allure-history
+              cp -r allure-history/* /tmp/allure-history/ 2>/dev/null || true
+              echo "History backed up to /tmp/allure-history"
+            else
+              echo "No allure-history directory found in gh-pages"
+            fi
+            
+            git checkout -
+          else
+            echo "gh-pages branch does not exist yet (first run)"
+          fi
 
-      - name: Build test report
-        uses: simple-elf/allure-report-action@v1.7
-        if: always()
-        with:
-          gh_pages: gh-pages
-          allure_history: allure-history
-          allure_results: allure-results
-          keep_reports: 20
+      - name: Install Allure
+        run: |
+          echo "Installing Allure ${ALLURE_VERSION}..."
+          wget -q https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz
+          tar -zxf allure-${ALLURE_VERSION}.tgz
+          sudo mv allure-${ALLURE_VERSION} /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+          allure --version
 
-      - name: Publish test report
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Restore Allure history
+        continue-on-error: true
+        run: |
+          if [ -d "/tmp/allure-history" ]; then
+            echo "Restoring allure history..."
+            mkdir -p allure-results/history
+            cp -r /tmp/allure-history/* allure-results/history/ 2>/dev/null || true
+            echo "History restored"
+            ls -la allure-results/history/ || echo "No history files"
+          else
+            echo "No history to restore (first run or no previous history)"
+          fi
+
+      - name: Generate Allure Report
+        run: |
+          echo "Generating Allure report..."
+          allure generate allure-results -o allure-report --clean
+          echo "Report generated successfully"
+          
+          # Create a simple redirect page
+          cat > allure-report/redirect.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <title>Redirecting to Allure Report...</title>
+            <meta http-equiv="refresh" content="0; url=./index.html">
+          </head>
+          <body>
+            <p>Redirecting to Allure Report...</p>
+            <p>If not redirected, <a href="./index.html">click here</a>.</p>
+          </body>
+          </html>
+          EOF
+
+      - name: Prepare deployment directory
+        run: |
+          mkdir -p gh-pages-deploy
+          
+          # Copy the report
+          cp -r allure-report/* gh-pages-deploy/
+          
+          # Save history for next run
+          if [ -d "allure-report/history" ]; then
+            mkdir -p gh-pages-deploy/allure-history
+            cp -r allure-report/history/* gh-pages-deploy/allure-history/
+            echo "History saved for next run"
+          fi
+          
+          echo "Deployment directory prepared"
+          ls -la gh-pages-deploy/
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-history
-          keep_files: true
+          publish_dir: ./gh-pages-deploy
+          keep_files: false
+          enable_jekyll: false
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy Allure report - Build ${{ github.run_number }}'
 
       - name: Add report link to summary
         if: always()
@@ -273,7 +340,12 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "🔗 [View Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }})" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Report will be available in a few minutes after deployment completes." >> $GITHUB_STEP_SUMMARY
+          echo "⏳ Report will be available in 1-2 minutes after deployment completes." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Build:** #${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
 
   # Job 5: Notify Results
   notify-results:
