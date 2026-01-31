@@ -1,0 +1,334 @@
+name: Selenium Tests with Allure Reports
+
+on:
+  push:
+    branches: [ main]
+  pull_request:
+    branches: [ main]
+  schedule:
+    # Run tests daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Test Suite to Run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - smoke
+          - login
+          - regression
+
+env:
+  PYTHON_VERSION: '3.11'
+  ALLURE_VERSION: '2.24.0'
+
+jobs:
+  # Job 1: Run Smoke Tests
+  smoke-tests:
+    name: Smoke Tests
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_suite == 'smoke' || github.event.inputs.test_suite == 'all' || github.event_name != 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@latest
+        with:
+          chrome-version: stable
+
+      - name: Install ChromeDriver
+        run: |
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1)
+          echo "Chrome version: $CHROME_VERSION"
+
+      - name: Create directories
+        run: |
+          mkdir -p screenshots
+          mkdir -p allure-results
+          mkdir -p allure-report
+
+      - name: Run Smoke Tests
+        continue-on-error: true
+        env:
+          TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+          HEADLESS: true
+          TEST_ENV: ci
+        run: |
+          pytest tests_pages/ -m smoke \
+            --alluredir=allure-results \
+            --clean-alluredir \
+            -v \
+            --tb=short \
+            --junit-xml=junit-smoke.xml
+
+      - name: Upload Smoke Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-test-results
+          path: |
+            allure-results/
+            screenshots/
+            junit-smoke.xml
+          retention-days: 30
+
+  # Job 2: Run Login Tests
+  login-tests:
+    name: Login Tests
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_suite == 'login' || github.event.inputs.test_suite == 'all' || github.event_name != 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@latest
+        with:
+          chrome-version: stable
+
+      - name: Create directories
+        run: |
+          mkdir -p screenshots
+          mkdir -p allure-results
+          mkdir -p allure-report
+
+      - name: Run Login Tests
+        continue-on-error: true
+        env:
+          HEADLESS: true
+          TEST_ENV: ci
+        run: |
+          pytest tests_pages/test_user_logins.py \
+            --alluredir=allure-results \
+            --clean-alluredir \
+            -v \
+            --tb=short \
+            --junit-xml=junit-login.xml
+
+      - name: Upload Login Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: login-test-results
+          path: |
+            allure-results/
+            screenshots/
+            junit-login.xml
+          retention-days: 30
+
+  # Job 3: Run Regression Tests
+  regression-tests:
+    name: Regression Tests
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_suite == 'regression' || github.event.inputs.test_suite == 'all' || github.event_name != 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@latest
+        with:
+          chrome-version: stable
+
+      - name: Create directories
+        run: |
+          mkdir -p screenshots
+          mkdir -p allure-results
+          mkdir -p allure-report
+
+      - name: Run Regression Tests
+        continue-on-error: true
+        env:
+          HEADLESS: true
+          TEST_ENV: ci
+        run: |
+          pytest tests_pages/ -m regression \
+            --alluredir=allure-results \
+            --clean-alluredir \
+            -v \
+            --tb=short \
+            --junit-xml=junit-regression.xml
+
+      - name: Upload Regression Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-test-results
+          path: |
+            allure-results/
+            screenshots/
+            junit-regression.xml
+          retention-days: 30
+
+  # Job 4: Generate and Deploy Allure Report
+  generate-report:
+    name: Generate Allure Report
+    runs-on: ubuntu-latest
+    needs: [smoke-tests, login-tests, regression-tests]
+    if: always()
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all test results
+        uses: actions/download-artifact@v4
+        with:
+          path: all-results
+
+      - name: Merge Allure Results
+        run: |
+          mkdir -p allure-results
+          # Copy all allure results from different test suites
+          find all-results -name "allure-results" -type d -exec cp -r {}/* allure-results/ \;
+
+      - name: Get Allure history
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Setup Allure
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        with:
+          allure_results: allure-results
+          allure_history: allure-history
+          keep_reports: 20
+
+      - name: Generate Allure Report
+        run: |
+          # Install Allure
+          wget https://github.com/allure-framework/allure2/releases/download/${{ env.ALLURE_VERSION }}/allure-${{ env.ALLURE_VERSION }}.tgz
+          tar -zxvf allure-${{ env.ALLURE_VERSION }}.tgz
+          
+          # Copy history from gh-pages if exists
+          if [ -d "gh-pages/allure-history" ]; then
+            cp -r gh-pages/allure-history allure-results/history
+          fi
+          
+          # Generate report
+          ./allure-${{ env.ALLURE_VERSION }}/bin/allure generate allure-results -o allure-report --clean
+
+      - name: Create index.html redirect
+        run: |
+          cat > allure-report/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <title>CILeasing Test Reports</title>
+            <meta http-equiv="refresh" content="0; url=./allure-report/index.html">
+          </head>
+          <body>
+            <p>Redirecting to Allure Report...</p>
+            <p>If you are not redirected, <a href="./allure-report/index.html">click here</a>.</p>
+          </body>
+          </html>
+          EOF
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-report
+          keep_files: false
+
+      - name: Add report link to summary
+        if: always()
+        run: |
+          echo "### 📊 Test Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 [View Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Report will be available in a few minutes after deployment completes." >> $GITHUB_STEP_SUMMARY
+
+  # Job 5: Notify Results
+  notify-results:
+    name: Test Results Summary
+    runs-on: ubuntu-latest
+    needs: [smoke-tests, login-tests, regression-tests, generate-report]
+    if: always()
+    
+    steps:
+      - name: Download all test results
+        uses: actions/download-artifact@v4
+        with:
+          path: all-results
+
+      - name: Generate Summary
+        run: |
+          echo "# 🧪 Test Execution Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Check for JUnit XML files and parse results
+          if [ -f "all-results/smoke-test-results/junit-smoke.xml" ]; then
+            echo "### ✅ Smoke Tests: Completed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ -f "all-results/login-test-results/junit-login.xml" ]; then
+            echo "### ✅ Login Tests: Completed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ -f "all-results/regression-test-results/junit-regression.xml" ]; then
+            echo "### ✅ Regression Tests: Completed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📊 Detailed Reports" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 [View Full Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Build:** #${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
