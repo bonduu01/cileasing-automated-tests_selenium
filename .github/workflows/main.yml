@@ -358,7 +358,8 @@ jobs:
           # Create environment properties
           cat > allure-results/environment.properties << EOF
           Browser=Chrome (Headless)
-          Environment=CI/CD
+          Engineer= Peter Molokwu
+          Environment=Staging
           Python.Version=3.11
           Platform=Ubuntu Latest
           Test.Framework=Pytest
