@@ -1,0 +1,68 @@
+INFO     conftest:conftest.py:49 ================================================================================
+INFO     conftest:conftest.py:50 🚀 TEST RUN STARTED
+INFO     conftest:conftest.py:51    🌐 Browser: chrome
+INFO     conftest:conftest.py:52    👁️ Headless: True
+INFO     conftest:conftest.py:53    ⏱️  Explicit wait: 30s
+INFO     conftest:conftest.py:54 ================================================================================
+
+INFO     conftest:conftest.py:209 
+################################################################################
+INFO     conftest:conftest.py:210 🧪 STARTING TEST: test_go_to_home_page_with_pom
+INFO     conftest:conftest.py:211 ################################################################################
+INFO     conftest:conftest.py:70 🌐 Launching chrome (headless=True)
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 There is no [linux64] chromedriver "144.0.7559.109" for browser google-chrome "144.0.7559" in cache
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 WebDriver version 144.0.7559.109 selected
+INFO     WDM:logger.py:11 Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/144.0.7559.109/linux64/chromedriver-linux64.zip
+INFO     WDM:logger.py:11 About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/144.0.7559.109/linux64/chromedriver-linux64.zip
+INFO     WDM:logger.py:11 Driver downloading response is 200
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver has been saved in cache [/home/runner/.wdm/drivers/chromedriver/linux64/144.0.7559.109]
+INFO     conftest:conftest.py:118 ✅ Browser ready
+INFO     pages.base_page:base_page.py:46 🏗️ Initialized HomePage
+INFO     pages.home_page:home_page.py:22 🏗️ Initialized HomePage - URL: https://candileasing.netlify.app/
+INFO     tests_pages.test_user_logins:test_user_logins.py:22 📋 Test: Go to home page
+INFO     tests_pages.test_user_logins:test_user_logins.py:24 📋 Step 1: Navigate to home page
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: HomePage.go_to_home_page()
+INFO     utils.decorators:decorators.py:84 📍 Before: URL=data:,, Title=
+INFO     pages.home_page:home_page.py:28 🔄 Navigating to home page: https://candileasing.netlify.app/
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: HomePage.navigate_to()
+INFO     utils.decorators:decorators.py:35    📥 Args: ('https://candileasing.netlify.app/',)
+INFO     pages.base_page:base_page.py:108 🌐 URL: https://candileasing.netlify.app/
+INFO     pages.base_page:base_page.py:111    ✅ Navigation successful
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.700s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     utils.decorators:decorators.py:94 📍 After: URL=https://candileasing.netlify.app/, Title=CAndILeasing
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.760s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     tests_pages.test_user_logins:test_user_logins.py:27 📋 Step 2: Verify home page loaded
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: HomePage.verify_home_page_loads()
+INFO     pages.home_page:home_page.py:34 ✅ Verifying home page loaded
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: HomePage.verify_title_contains()
+INFO     utils.decorators:decorators.py:35    📥 Args: ('CAndILeasing',)
+INFO     pages.base_page:base_page.py:841 📄 Verifying title contains: CAndILeasing
+INFO     pages.base_page:base_page.py:846    ✅ Title verified: CAndILeasing
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.015s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     pages.home_page:home_page.py:36    ✅ Home page title verified: CAndILeasing
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.018s
+INFO     utils.decorators:decorators.py:50 ============================================================
+INFO     conftest:conftest.py:121 🌐 Closing browser
+INFO     conftest:conftest.py:213 
+################################################################################
+INFO     conftest:conftest.py:214 🏁 FINISHED TEST: test_go_to_home_page_with_pom
+INFO     conftest:conftest.py:215 ################################################################################
