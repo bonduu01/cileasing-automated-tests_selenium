@@ -1,0 +1,7 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"Verify validation error when password is not provided.","3336","test_login_with_no_password","tests_pages","Sun Feb 01 17:06:01 UTC 2026","passed","Sun Feb 01 17:06:04 UTC 2026","TestUserLogins","test_user_logins","",""
+"Verify validation errors when no credentials are provided.","2696","test_login_with_no_username_or_password","tests_pages","Sun Feb 01 17:06:05 UTC 2026","passed","Sun Feb 01 17:06:07 UTC 2026","TestUserLogins","test_user_logins","",""
+"Verify successful login with valid credentials using POM.","83902","test_login_with_valid_credentials_with_pom","tests_pages","Sun Feb 01 17:04:26 UTC 2026","passed","Sun Feb 01 17:05:50 UTC 2026","TestUserLogins","test_user_logins","",""
+"Verify login failure with incorrect username.","4619","test_login_with_wrong_username","tests_pages","Sun Feb 01 17:05:51 UTC 2026","passed","Sun Feb 01 17:05:55 UTC 2026","TestUserLogins","test_user_logins","",""
+"Verify login failure with incorrect password.","4902","test_login_with_wrong_password","tests_pages","Sun Feb 01 17:05:56 UTC 2026","passed","Sun Feb 01 17:06:01 UTC 2026","TestUserLogins","test_user_logins","",""
+"Verify home page loads correctly with Page Object Model.","974","test_go_to_home_page_with_pom","tests_pages","Sun Feb 01 17:04:25 UTC 2026","passed","Sun Feb 01 17:04:26 UTC 2026","TestUserLogins","test_user_logins","",""
