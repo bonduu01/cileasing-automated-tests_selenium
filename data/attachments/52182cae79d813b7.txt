@@ -36,12 +36,12 @@ INFO     utils.decorators:decorators.py:35    📥 Args: ('https://candileasing.
 INFO     pages.base_page:base_page.py:108 🌐 URL: https://candileasing.netlify.app/
 INFO     pages.base_page:base_page.py:111    ✅ Navigation successful
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.612s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.820s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     utils.decorators:decorators.py:94 📍 After: URL=https://candileasing.netlify.app/, Title=CAndILeasing
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.678s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.884s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     tests_pages.test_user_logins:test_user_logins.py:27 📋 Step 2: Verify home page loaded

@@ -22,12 +22,12 @@ INFO     utils.decorators:decorators.py:35    📥 Args: ('https://candileasing.
 INFO     pages.base_page:base_page.py:108 🌐 URL: https://candileasing.netlify.app/
 INFO     pages.base_page:base_page.py:111    ✅ Navigation successful
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.141s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.227s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     utils.decorators:decorators.py:94 📍 After: URL=https://candileasing.netlify.app/, Title=CAndILeasing
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.159s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.243s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     tests_pages.test_user_logins:test_user_logins.py:72 📋 Step 2: Enter wrong username
@@ -44,11 +44,11 @@ INFO     pages.base_page:base_page.py:941 📜 Scrolling to: input[name="email"]
 INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
 INFO     pages.base_page:base_page.py:363    ✅ Fill successful
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 2.023s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 2.060s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 2.024s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 2.061s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     tests_pages.test_user_logins:test_user_logins.py:75 📋 Step 3: Enter correct password
@@ -65,11 +65,11 @@ INFO     pages.base_page:base_page.py:941 📜 Scrolling to: input[name="passwor
 INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
 INFO     pages.base_page:base_page.py:363    ✅ Fill successful
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.628s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.616s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.629s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.617s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     tests_pages.test_user_logins:test_user_logins.py:78 📋 Step 4: Click login button
@@ -84,13 +84,14 @@ INFO     pages.base_page:base_page.py:1044    🔍 Element state - Displayed: Tr
 INFO     pages.base_page:base_page.py:1050       Text: 'Proceed'
 INFO     pages.base_page:base_page.py:941 📜 Scrolling to: button[type="submit"][buttontype="primary"]
 INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
+INFO     pages.base_page:base_page.py:311    🔍 Element state changed - click likely registered
 INFO     pages.base_page:base_page.py:281    ✅ Click successful
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.138s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.130s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.139s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.131s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     tests_pages.test_user_logins:test_user_logins.py:81 📋 Step 5: Verify error message
@@ -104,11 +105,11 @@ INFO     utils.decorators:decorators.py:37    📥 Kwargs: {'timeout': 5}
 INFO     pages.base_page:base_page.py:761 👁️ Verifying visibility: div[role="alert"]
 INFO     pages.base_page:base_page.py:767    ✅ Element is visible
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.525s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.638s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.526s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.639s
 INFO     utils.decorators:decorators.py:50 ============================================================
 INFO     conftest:conftest.py:121 🌐 Closing browser
 INFO     conftest:conftest.py:213 

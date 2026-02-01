@@ -22,12 +22,12 @@ INFO     utils.decorators:decorators.py:35    📥 Args: ('https://candileasing.
 INFO     pages.base_page:base_page.py:108 🌐 URL: https://candileasing.netlify.app/
 INFO     pages.base_page:base_page.py:111    ✅ Navigation successful
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.141s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.224s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     utils.decorators:decorators.py:94 📍 After: URL=https://candileasing.netlify.app/, Title=CAndILeasing
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.166s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.244s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     tests_pages.test_user_logins:test_user_logins.py:40 📋 Step 2: Perform login
@@ -44,7 +44,7 @@ INFO     pages.base_page:base_page.py:941 📜 Scrolling to: input[name="email"]
 INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
 INFO     pages.base_page:base_page.py:363    ✅ Fill successful
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 2.306s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 2.917s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     utils.decorators:decorators.py:30 ============================================================
@@ -56,7 +56,7 @@ INFO     pages.base_page:base_page.py:941 📜 Scrolling to: input[name="passwor
 INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
 INFO     pages.base_page:base_page.py:363    ✅ Fill successful
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.614s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.620s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     utils.decorators:decorators.py:30 ============================================================
@@ -70,12 +70,12 @@ INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
 INFO     pages.base_page:base_page.py:311    🔍 Element state changed - click likely registered
 INFO     pages.base_page:base_page.py:281    ✅ Click successful
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.212s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.246s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     pages.login_page:login_page.py:46 ✅ Login form submitted
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 4.134s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 4.785s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     tests_pages.test_user_logins:test_user_logins.py:46 📋 Step 3: Verify login successful
@@ -87,15 +87,15 @@ INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.verify_eleme
 INFO     utils.decorators:decorators.py:35    📥 Args: ('div.uppercase',)
 INFO     pages.base_page:base_page.py:761 👁️ Verifying visibility: div.uppercase
 ERROR    pages.base_page:base_page.py:769    ❌ Element not visible within 30s
-INFO     pages.base_page:base_page.py:1067    📸 Screenshot saved: screenshots/element_not_visible_1769965895.png
+INFO     pages.base_page:base_page.py:1067    📸 Screenshot saved: screenshots/element_not_visible_1769966145.png
 ERROR    utils.decorators:decorators.py:58    ❌ FAILED: LoginPage.verify_element_visible()
 ERROR    utils.decorators:decorators.py:59    💥 Error: AssertionError: Element 'div.uppercase' is not visible
-ERROR    utils.decorators:decorators.py:60    ⏱️  Time: 31.461s
+ERROR    utils.decorators:decorators.py:60    ⏱️  Time: 31.443s
 ERROR    utils.decorators:decorators.py:61 ============================================================
 
 ERROR    utils.decorators:decorators.py:58    ❌ FAILED: LoginPage.verify_login_successful_load_companies()
 ERROR    utils.decorators:decorators.py:59    💥 Error: AssertionError: Element 'div.uppercase' is not visible
-ERROR    utils.decorators:decorators.py:60    ⏱️  Time: 31.462s
+ERROR    utils.decorators:decorators.py:60    ⏱️  Time: 31.443s
 ERROR    utils.decorators:decorators.py:61 ============================================================
 INFO     conftest:conftest.py:121 🌐 Closing browser
 INFO     conftest:conftest.py:213 

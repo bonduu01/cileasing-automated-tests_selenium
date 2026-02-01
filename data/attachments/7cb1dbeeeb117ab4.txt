@@ -22,12 +22,12 @@ INFO     utils.decorators:decorators.py:35    📥 Args: ('https://candileasing.
 INFO     pages.base_page:base_page.py:108 🌐 URL: https://candileasing.netlify.app/
 INFO     pages.base_page:base_page.py:111    ✅ Navigation successful
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.176s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.226s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     utils.decorators:decorators.py:94 📍 After: URL=https://candileasing.netlify.app/, Title=CAndILeasing
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.202s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.242s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     tests_pages.test_user_logins:test_user_logins.py:95 📋 Step 2: Enter correct username
@@ -44,11 +44,11 @@ INFO     pages.base_page:base_page.py:941 📜 Scrolling to: input[name="email"]
 INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
 INFO     pages.base_page:base_page.py:363    ✅ Fill successful
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 2.095s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 2.080s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 2.097s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 2.081s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     tests_pages.test_user_logins:test_user_logins.py:98 📋 Step 3: Enter wrong password
@@ -65,11 +65,11 @@ INFO     pages.base_page:base_page.py:941 📜 Scrolling to: input[name="passwor
 INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
 INFO     pages.base_page:base_page.py:363    ✅ Fill successful
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.624s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.619s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.624s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.620s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     tests_pages.test_user_logins:test_user_logins.py:101 📋 Step 4: Click login button
@@ -87,11 +87,11 @@ INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
 INFO     pages.base_page:base_page.py:311    🔍 Element state changed - click likely registered
 INFO     pages.base_page:base_page.py:281    ✅ Click successful
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.147s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.131s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.148s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.132s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     tests_pages.test_user_logins:test_user_logins.py:104 📋 Step 5: Verify error message
@@ -105,11 +105,11 @@ INFO     utils.decorators:decorators.py:37    📥 Kwargs: {'timeout': 5}
 INFO     pages.base_page:base_page.py:761 👁️ Verifying visibility: div[role="alert"]
 INFO     pages.base_page:base_page.py:767    ✅ Element is visible
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.526s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.737s
 INFO     utils.decorators:decorators.py:50 ============================================================
 
 INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
-INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.526s
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.738s
 INFO     utils.decorators:decorators.py:50 ============================================================
 INFO     conftest:conftest.py:121 🌐 Closing browser
 INFO     conftest:conftest.py:213 
