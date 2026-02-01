@@ -7,6 +7,8 @@ from pages.home_page import HomePage
 from pages.login_page import LoginPage
 from pages.self_service_page import SelfServicePage
 from pages.edit_self_service_page import EditSelfServicePage
+# from pages.add_bank_details_page import AddBankDetailsPage
+# from pages.edit_bank_details_page import EditBankDetailsPage
 from pages.add_emergency_contact_page import AddEmergencyContactPage
 from pages.edit_emergency_contact_page import EditEmergencyContactPage
 from pages.add_bvn_page import AddBvnPage
@@ -19,8 +21,8 @@ __all__ = [
     "LoginPage",
     "SelfServicePage",
     "EditSelfServicePage",
-    "AddBankDetailsPage",
-    "EditBankDetailsPage",
+    # "AddBankDetailsPage",
+    # "EditBankDetailsPage",
     "AddEmergencyContactPage",
     "EditEmergencyContactPage",
     "AddBvnPage",
