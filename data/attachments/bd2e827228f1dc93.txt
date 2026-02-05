@@ -1,0 +1,131 @@
+INFO     conftest:conftest.py:209 
+################################################################################
+INFO     conftest:conftest.py:210 🧪 STARTING TEST: test_login_with_no_password
+INFO     conftest:conftest.py:211 ################################################################################
+INFO     conftest:conftest.py:70 🌐 Launching chrome (headless=True)
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/144.0.7559.133/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:118 ✅ Browser ready
+INFO     pages.base_page:base_page.py:46 🏗️ Initialized LoginPage
+INFO     pages.login_page:login_page.py:25 🏗️ Initialized LoginPage - URL: https://candileasing.netlify.app/
+INFO     tests_pages.test_user_logins:test_user_logins.py:113 📋 Test: Login with no password
+INFO     tests_pages.test_user_logins:test_user_logins.py:115 📋 Step 1: Navigate to login page
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.go_to_login_page()
+INFO     utils.decorators:decorators.py:84 📍 Before: URL=data:,, Title=
+INFO     pages.login_page:login_page.py:31 🔄 Navigating to login page: https://candileasing.netlify.app/
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.navigate_to()
+INFO     utils.decorators:decorators.py:35    📥 Args: ('https://candileasing.netlify.app/',)
+INFO     pages.base_page:base_page.py:108 🌐 URL: https://candileasing.netlify.app/
+INFO     pages.base_page:base_page.py:111    ✅ Navigation successful
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.142s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     utils.decorators:decorators.py:94 📍 After: URL=https://candileasing.netlify.app/, Title=CAndILeasing
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.158s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     tests_pages.test_user_logins:test_user_logins.py:118 📋 Step 2: Enter username only
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.enter_email()
+INFO     utils.decorators:decorators.py:35    📥 Args: ('bonduu001@yahoo.com',)
+INFO     pages.login_page:login_page.py:51 📧 Entering email: bonduu001@yahoo.com
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.fill_input()
+INFO     utils.decorators:decorators.py:35    📥 Args: ('input[name="email"]', 'bonduu001@yahoo.com')
+INFO     pages.base_page:base_page.py:341 ✍️ Selector: input[name="email"], Value: bonduu001@yahoo.com
+INFO     pages.base_page:base_page.py:1044    🔍 Element state - Displayed: True, Enabled: True
+INFO     pages.base_page:base_page.py:941 📜 Scrolling to: input[name="email"]
+INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
+INFO     pages.base_page:base_page.py:363    ✅ Fill successful
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 2.023s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 2.024s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     tests_pages.test_user_logins:test_user_logins.py:121 📋 Step 3: Click login button
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.click_login_button()
+INFO     pages.login_page:login_page.py:63 🖱️ Clicking login button
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.click_element()
+INFO     utils.decorators:decorators.py:35    📥 Args: ('button[type="submit"][buttontype="primary"]',)
+INFO     pages.base_page:base_page.py:255 🖱️ Selector: button[type="submit"][buttontype="primary"]
+INFO     pages.base_page:base_page.py:1044    🔍 Element state - Displayed: True, Enabled: True
+INFO     pages.base_page:base_page.py:1050       Text: 'Proceed'
+INFO     pages.base_page:base_page.py:941 📜 Scrolling to: button[type="submit"][buttontype="primary"]
+INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
+INFO     pages.base_page:base_page.py:311    🔍 Element state changed - click likely registered
+INFO     pages.base_page:base_page.py:281    ✅ Click successful
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.129s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.130s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     tests_pages.test_user_logins:test_user_logins.py:124 📋 Step 4: Verify password error
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.verify_password_blank_error()
+INFO     pages.login_page:login_page.py:90 🔍 Verifying password blank error
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.verify_validation_error()
+INFO     utils.decorators:decorators.py:35    📥 Args: ('Password cannot be blank',)
+INFO     pages.base_page:base_page.py:857 ⚠️ Verifying validation error: Password cannot be blank
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.verify_text_visible()
+INFO     utils.decorators:decorators.py:35    📥 Args: ('Password cannot be blank', 30)
+INFO     pages.base_page:base_page.py:790 📝 Verifying text visible: Password cannot be blank
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.verify_element_visible()
+INFO     utils.decorators:decorators.py:35    📥 Args: ("//*[contains(text(), 'Password cannot be blank')]", 30)
+INFO     pages.base_page:base_page.py:761 👁️ Verifying visibility: //*[contains(text(), 'Password cannot be blank')]
+INFO     pages.base_page:base_page.py:767    ✅ Element is visible
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.013s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.014s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.015s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.015s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.is_password_blank_error_visible()
+INFO     pages.login_page:login_page.py:103 👁️ Checking password blank error visibility
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.is_validation_error_visible()
+INFO     utils.decorators:decorators.py:35    📥 Args: ('Password cannot be blank',)
+INFO     pages.base_page:base_page.py:872 🔍 Checking validation error visibility: Password cannot be blank
+INFO     pages.base_page:base_page.py:875    Result: True
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:48    📤 Return: True
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.009s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     pages.login_page:login_page.py:105    Result: True
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:48    📤 Return: True
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.010s
+INFO     utils.decorators:decorators.py:50 ============================================================
+INFO     conftest:conftest.py:121 🌐 Closing browser
+INFO     conftest:conftest.py:213 
+################################################################################
+INFO     conftest:conftest.py:214 🏁 FINISHED TEST: test_login_with_no_password
+INFO     conftest:conftest.py:215 ################################################################################

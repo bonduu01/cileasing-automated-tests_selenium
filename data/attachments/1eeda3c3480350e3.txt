@@ -1,0 +1,201 @@
+INFO     conftest:conftest.py:209 
+################################################################################
+INFO     conftest:conftest.py:210 🧪 STARTING TEST: test_login_with_valid_credentials_with_pom
+INFO     conftest:conftest.py:211 ################################################################################
+INFO     conftest:conftest.py:70 🌐 Launching chrome (headless=True)
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/144.0.7559.133/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:118 ✅ Browser ready
+INFO     pages.base_page:base_page.py:46 🏗️ Initialized LoginPage
+INFO     pages.login_page:login_page.py:25 🏗️ Initialized LoginPage - URL: https://candileasing.netlify.app/
+INFO     tests_pages.test_user_logins:test_user_logins.py:35 📋 Test: Valid Credentials Login
+INFO     tests_pages.test_user_logins:test_user_logins.py:37 📋 Step 1: Navigate to login page
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.go_to_login_page()
+INFO     utils.decorators:decorators.py:84 📍 Before: URL=data:,, Title=
+INFO     pages.login_page:login_page.py:31 🔄 Navigating to login page: https://candileasing.netlify.app/
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.navigate_to()
+INFO     utils.decorators:decorators.py:35    📥 Args: ('https://candileasing.netlify.app/',)
+INFO     pages.base_page:base_page.py:108 🌐 URL: https://candileasing.netlify.app/
+INFO     pages.base_page:base_page.py:111    ✅ Navigation successful
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.116s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     utils.decorators:decorators.py:94 📍 After: URL=https://candileasing.netlify.app/, Title=CAndILeasing
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.142s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     tests_pages.test_user_logins:test_user_logins.py:40 📋 Step 2: Perform login
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.login_user()
+INFO     utils.decorators:decorators.py:37    📥 Kwargs: {'email': 'ekundayorotimi@gmail.com', 'password': 'PAa@12345'}
+INFO     pages.login_page:login_page.py:40 🔐 Attempting login with email: ekundayorotimi@gmail.com
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.fill_input()
+INFO     utils.decorators:decorators.py:35    📥 Args: ('input[name="email"]', 'ekundayorotimi@gmail.com')
+INFO     pages.base_page:base_page.py:341 ✍️ Selector: input[name="email"], Value: ekundayorotimi@gmail.com
+INFO     pages.base_page:base_page.py:1044    🔍 Element state - Displayed: True, Enabled: True
+INFO     pages.base_page:base_page.py:941 📜 Scrolling to: input[name="email"]
+INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
+INFO     pages.base_page:base_page.py:363    ✅ Fill successful
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 2.408s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.fill_input()
+INFO     utils.decorators:decorators.py:35    📥 Args: ('input[name="password"]', 'PAa@12345')
+INFO     pages.base_page:base_page.py:341 ✍️ Selector: input[name="password"], Value: PAa@12345
+INFO     pages.base_page:base_page.py:1044    🔍 Element state - Displayed: True, Enabled: True
+INFO     pages.base_page:base_page.py:941 📜 Scrolling to: input[name="password"]
+INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
+INFO     pages.base_page:base_page.py:363    ✅ Fill successful
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.623s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.click_element()
+INFO     utils.decorators:decorators.py:35    📥 Args: ('button[type="submit"][buttontype="primary"]',)
+INFO     pages.base_page:base_page.py:255 🖱️ Selector: button[type="submit"][buttontype="primary"]
+INFO     pages.base_page:base_page.py:1044    🔍 Element state - Displayed: True, Enabled: True
+INFO     pages.base_page:base_page.py:1050       Text: 'Proceed'
+INFO     pages.base_page:base_page.py:941 📜 Scrolling to: button[type="submit"][buttontype="primary"]
+INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
+INFO     pages.base_page:base_page.py:311    🔍 Element state changed - click likely registered
+INFO     pages.base_page:base_page.py:281    ✅ Click successful
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.218s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     pages.login_page:login_page.py:46 ✅ Login form submitted
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 4.251s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     tests_pages.test_user_logins:test_user_logins.py:46 📋 Step 3: Verify login successful
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.verify_login_successful_load_companies()
+INFO     pages.login_page:login_page.py:69 ✅ Verifying successful login - checking for company list
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.verify_element_visible()
+INFO     utils.decorators:decorators.py:35    📥 Args: ('div.uppercase',)
+INFO     pages.base_page:base_page.py:761 👁️ Verifying visibility: div.uppercase
+INFO     pages.base_page:base_page.py:767    ✅ Element is visible
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.367s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.verify_element_visible()
+INFO     utils.decorators:decorators.py:35    📥 Args: ('div.space-y-4 div.uppercase',)
+INFO     pages.base_page:base_page.py:761 👁️ Verifying visibility: div.space-y-4 div.uppercase
+INFO     pages.base_page:base_page.py:767    ✅ Element is visible
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.039s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     pages.login_page:login_page.py:73 ✅ Company list verified
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.409s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     tests_pages.test_user_logins:test_user_logins.py:49 📋 Step 4: Click default company
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.click_default_company_link()
+INFO     utils.decorators:decorators.py:84 📍 Before: URL=https://candileasing.netlify.app/, Title=CAndILeasing
+INFO     pages.login_page:login_page.py:123 🖱️ Clicking default company link
+INFO     pages.login_page:login_page.py:127 ⏳ Checking for loading indicators...
+INFO     pages.login_page:login_page.py:138    ℹ️ No loading indicators detected
+INFO     pages.login_page:login_page.py:144    📍 Current URL: https://candileasing.netlify.app/
+INFO     pages.login_page:login_page.py:158    Trying: Standard click with retry
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.click_element_with_retry()
+INFO     utils.decorators:decorators.py:35    📥 Args: ("button[title='DEFAULT']",)
+INFO     utils.decorators:decorators.py:37    📥 Kwargs: {'timeout': 30, 'max_attempts': 3}
+INFO     pages.base_page:base_page.py:148 🖱️ Click with retry - Selector: button[title='DEFAULT'], Max attempts: 3
+INFO     pages.base_page:base_page.py:154    Attempt 1/3
+INFO     pages.base_page:base_page.py:1044    🔍 Element state - Displayed: True, Enabled: True
+INFO     pages.base_page:base_page.py:1050       Text: 'D
+DEFAULT'
+INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
+INFO     pages.base_page:base_page.py:171    📌 Strategy: Standard click
+INFO     pages.base_page:base_page.py:184    ✅ Click successful on attempt 1
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 1.380s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+WARNING  pages.login_page:login_page.py:171    ⚠️ No navigation detected with Standard click with retry
+INFO     pages.login_page:login_page.py:158    Trying: JavaScript click
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: LoginPage.click_with_javascript()
+INFO     utils.decorators:decorators.py:35    📥 Args: ("button[title='DEFAULT']",)
+INFO     pages.base_page:base_page.py:333 🖱️ JS Click - Selector: button[title='DEFAULT']
+INFO     pages.base_page:base_page.py:336    ✅ JS Click successful
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.075s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     pages.login_page:login_page.py:168    ✅ Navigation successful with JavaScript click
+INFO     pages.login_page:login_page.py:185    📍 Final URL: https://candileasing.netlify.app/personal/self-service
+INFO     pages.login_page:login_page.py:188    ✅ URL changed - navigation detected
+INFO     pages.login_page:login_page.py:199 ⏳ Waiting for page to stabilize...
+INFO     pages.login_page:login_page.py:202 ✅ Transitioning to Self Service page object
+INFO     pages.base_page:base_page.py:46 🏗️ Initialized SelfServicePage
+INFO     pages.self_service_page:self_service_page.py:31 🏗️ Initialized SelfServicePage - URL: https://candileasing.netlify.app/personal/self-service
+INFO     utils.decorators:decorators.py:94 📍 After: URL=https://candileasing.netlify.app/personal/self-service, Title=CAndILeasing
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:48    📤 Return: <pages.self_service_page.SelfServicePage object at 0x7fc8928e8f10>
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 43.665s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     tests_pages.test_user_logins:test_user_logins.py:52 ✅ Successfully navigated to Self Service page
+INFO     tests_pages.test_user_logins:test_user_logins.py:54 📋 Step 5: Verify self-service page loads
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: SelfServicePage.verify_self_service_page_loads()
+INFO     pages.self_service_page:self_service_page.py:36 ✅ Verifying self-service page load
+INFO     pages.self_service_page:self_service_page.py:39    📍 Current URL: https://candileasing.netlify.app/personal/self-service
+INFO     pages.self_service_page:self_service_page.py:43    ✅ URL contains 'self-service'
+INFO     pages.self_service_page:self_service_page.py:59    ✅ Profile avatar: Found 1 (1 visible)
+INFO     pages.self_service_page:self_service_page.py:59    ✅ Any avatar: Found 2 (2 visible)
+INFO     pages.self_service_page:self_service_page.py:59    ✅ Dropdown trigger: Found 2 (1 visible)
+INFO     pages.self_service_page:self_service_page.py:65 ✅ Page verification complete
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 0.051s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     tests_pages.test_user_logins:test_user_logins.py:57 📋 Step 6: Logout
+INFO     utils.decorators:decorators.py:30 ============================================================
+INFO     utils.decorators:decorators.py:31 🔵 ENTERING: SelfServicePage.click_to_logout()
+INFO     pages.self_service_page:self_service_page.py:73 🚪 Initiating logout process...
+INFO     pages.self_service_page:self_service_page.py:77    📍 Current URL: https://candileasing.netlify.app/personal/self-service
+INFO     pages.self_service_page:self_service_page.py:87    Attempt 1/3
+INFO     pages.self_service_page:self_service_page.py:113    Trying avatar selector: span.ant-avatar.ant-dropdown-trigger
+INFO     pages.self_service_page:self_service_page.py:116    ✅ Found avatar with: span.ant-avatar.ant-dropdown-trigger
+INFO     pages.base_page:base_page.py:1044    🔍 Element state - Displayed: True, Enabled: True
+INFO     pages.base_page:base_page.py:1050       Text: 'MM'
+INFO     pages.base_page:base_page.py:935 📜 Scrolling to element
+INFO     pages.self_service_page:self_service_page.py:137    📌 Strategy 1: Hover + Click
+INFO     pages.self_service_page:self_service_page.py:157    📌 Strategy 2: JavaScript trigger
+INFO     pages.self_service_page:self_service_page.py:183    ✅ Dropdown opened with Strategy 2
+INFO     pages.self_service_page:self_service_page.py:223    ⏳ Confirming dropdown visibility...
+INFO     pages.self_service_page:self_service_page.py:230    ✅ Dropdown menu confirmed visible
+INFO     pages.self_service_page:self_service_page.py:235    🖱️ Clicking logout...
+INFO     pages.self_service_page:self_service_page.py:274    ✅ Logout clicked with: //li[contains(@class, 'ant-dropdown-menu-item')]//p[contains(text(), 'Logout')]
+INFO     pages.self_service_page:self_service_page.py:286    Checking for redirect to login page...
+WARNING  pages.self_service_page:self_service_page.py:297    ⚠️ Could not confirm logout redirect, but assuming success
+INFO     utils.decorators:decorators.py:46    ✅ SUCCESS
+INFO     utils.decorators:decorators.py:49    ⏱️  Time: 33.985s
+INFO     utils.decorators:decorators.py:50 ============================================================
+
+INFO     tests_pages.test_user_logins:test_user_logins.py:60 ✅ Test completed successfully
+INFO     conftest:conftest.py:121 🌐 Closing browser
+INFO     conftest:conftest.py:213 
+################################################################################
+INFO     conftest:conftest.py:214 🏁 FINISHED TEST: test_login_with_valid_credentials_with_pom
+INFO     conftest:conftest.py:215 ################################################################################
